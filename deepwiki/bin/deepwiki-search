@@ -1,0 +1,19 @@
+#!/bin/sh
+# deepwiki-search - Semantic search in wiki content
+# Usage: deepwiki-search <query> [repoName]
+#   query:    required, search question
+#   repoName: optional, auto-detected from git remote if omitted
+
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+. "$SCRIPT_DIR/_common.sh"
+
+if [ -z "$1" ]; then
+  echo "Usage: deepwiki-search <query> [repoName]" >&2
+  echo "  query: search question, e.g. \"how to configure database\"" >&2
+  exit 1
+fi
+
+QUERY="$1"
+REPO=$(get_repo_name "$2")
+
+mcp_call "search_wiki" "{\"repoName\":\"$REPO\",\"query\":\"$QUERY\"}"

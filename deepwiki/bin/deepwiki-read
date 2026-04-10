@@ -1,0 +1,19 @@
+#!/bin/sh
+# deepwiki-read - Read a specific wiki page content
+# Usage: deepwiki-read <path> [repoName]
+#   path:     required, wiki page path (e.g. "系统架构/核心架构组件")
+#   repoName: optional, auto-detected from git remote if omitted
+
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+. "$SCRIPT_DIR/_common.sh"
+
+if [ -z "$1" ]; then
+  echo "Usage: deepwiki-read <path> [repoName]" >&2
+  echo "  path: wiki page path, e.g. \"系统架构/核心架构组件\"" >&2
+  exit 1
+fi
+
+PAGE_PATH="$1"
+REPO=$(get_repo_name "$2")
+
+mcp_call "read_wiki_contents" "{\"repoName\":\"$REPO\",\"path\":\"$PAGE_PATH\"}"

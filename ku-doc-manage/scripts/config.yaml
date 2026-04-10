@@ -1,0 +1,30 @@
+# 知识库开放API 认证配置
+# 支持两种认证方式（按优先级自动降级）：
+# 1. 个人身份认证（推荐，优先级最高）
+# 2. 数字员工身份认证（使用 AK/SK，兜底方案）
+
+# 1. 个人身份认证配置（第一优先级）
+xiaolongxia_auth:
+  # 是否启用个人身份认证，默认 true
+  enabled: true
+  # 说明：
+  # - API基础URL: https://apigo.baidu-int.com/wiki/so
+  # - 双token认证机制：
+  #   * Ugate-Token: 自动调用 get-ugate-token SKILL 获取
+  #   * x-ku-open-app-token: 使用固定值
+  # - Token会自动缓存，避免重复获取
+  # - 首次获取时需要在手机端如流确认身份
+  # - 用户身份识别由 get-ugate-token SKILL 内部处理，无需额外配置
+
+# 2. 数字员工身份认证配置（第二优先级，兜底方案）
+# 当个人身份认证失败时，自动切换到此认证方式
+digital_auth:
+  ak: "ak"
+  sk: "sk"
+
+# 3. 图片上传配置
+# 用于在创建文档前上传图片的固定临时文档ID
+image_upload:
+  # 临时文档ID，用于上传 Markdown 中的图片
+  # 必须是一个已存在的文档ID，否则图片上传会失败
+  temp_doc_id: ""

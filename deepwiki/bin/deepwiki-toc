@@ -1,0 +1,11 @@
+#!/bin/sh
+# deepwiki-toc - Get wiki table of contents for a repository
+# Usage: deepwiki-toc [repoName]
+#   repoName: optional, auto-detected from git remote if omitted
+
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+. "$SCRIPT_DIR/_common.sh"
+
+REPO=$(get_repo_name "$1")
+
+mcp_call "read_wiki_struct" "{\"repoName\":\"$REPO\"}"
