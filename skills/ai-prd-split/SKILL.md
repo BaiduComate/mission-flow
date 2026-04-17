@@ -1,15 +1,15 @@
 ---
-name: requirement-splitter
+name: ai-prd-split
 description: Use when splitting a PRD or technical doc into structured iCafe task cards. Triggers on "拆分 PRD"、"创建任务卡片"、"把文档转成 iCafe 任务"、知识库 URL 输入等。
 ---
 
 # 需求拆分助手
 
-**Announce at start:** "我正在使用 requirement-splitter skill 来拆分文档。"
+**Announce at start:** "我正在使用 ai-prd-split skill 来拆分文档。"
 
 ## 依赖技能
 
-- `icafe-card-assistant`：创建 iCafe 卡片及绑定父子关系
+- `icafe-official`：创建 iCafe 卡片及绑定父子关系
 - `ku-doc-manage`：读取知识库文档
 
 ## 流程
