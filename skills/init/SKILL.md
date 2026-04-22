@@ -51,6 +51,49 @@ Good questions:
 
 Do not ask about anything the repo already makes clear.
 
+## Output structure
+
+Generate two files: `AGENTS.md` as a navigation map, and `ARCHITECTURE.md` as a standalone architecture reference.
+
+### AGENTS.md (~100 lines, 3-4 sections max)
+
+```markdown
+# {Project Name}
+
+{One sentence: what is this project.}
+
+## Commands
+
+{Only the 3-5 commands an agent needs most. Non-obvious flags, exact invocations.}
+
+## Key Constraints
+
+{5-10 bullets. Each one is a trap an agent would fall into without warning.
+ Merge formatting, linting, TypeScript, conventions, testing quirks — all here as flat bullets.
+ No sub-sections.}
+
+## Project Map
+
+{Index pointing to deeper docs. One line per entry, path + what it covers.}
+
+- `ARCHITECTURE.md`: system architecture and package structure
+- `.comate/rules/`: project-specific development rules (if present)
+- `.comate/specs/`: historical spec documents from spec-mode tasks (if present)
+- {other docs, rule directories, or reference files worth reading}
+```
+
+### ARCHITECTURE.md
+
+A standalone file describing the system's high-level structure. Keep it concise, the goal is orientation, not exhaustive documentation.
+
+Required content:
+
+- A **mermaid diagram** showing major components and their relationships (communication flow, data flow, or dependency direction, pick whichever best explains the system)
+- A **brief legend** below the diagram: one line per component explaining what it is and where it lives
+- If the project is a monorepo, list packages with one-line descriptions and note the build order or dependency direction
+
+Do NOT include detailed API surfaces, config options, or implementation details. Those belong in more specific docs.
+
 ## Writing rules
 
 Include only high-signal, repo-specific guidance such as:
