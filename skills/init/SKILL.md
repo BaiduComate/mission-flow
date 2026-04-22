@@ -27,6 +27,13 @@ If architecture is still unclear after reading config and docs, inspect a small 
 
 Prefer executable sources of truth over prose. If docs conflict with config or scripts, trust the executable source and only keep what you can verify.
 
+## Internal tools reference
+
+Common Baidu-internal tools you may encounter in repos:
+
+- **iCode**: Baidu's code hosting and code review platform. `git push origin HEAD:refs/for/<branch>` is an iCode CR (code review) push. iCode is NOT Gerrit, never mention Gerrit when describing iCode workflows.
+- **iCafe**: Baidu's project management platform. Work items are called **cards**, not tickets or issues.
+
 ## What to extract
 
 Look for the highest-signal facts for an agent working in this repo:
@@ -77,18 +84,18 @@ Generate two files: `AGENTS.md` as a navigation map, and `ARCHITECTURE.md` as a 
 
 ## Workflow
 
-{Branching model, PR/CR flow, release process. Example:
- `master` (always releasable) → `release-YYYYMMDD` (release branches) → `feature-*` (feature branches off release)
+{Branching model and CR flow only. Do NOT include CI pipeline details, build steps, or deployment processes here.
+ Example: `master` (always releasable) → `release-YYYYMMDD` (release branches) → `feature-*` (feature branches off release)
  Keep to 3-5 lines max.}
 
 ## Project Map
 
-{Index pointing to deeper docs. One line per entry, path + what it covers.}
+{Index pointing to documentation files that contain project knowledge an agent wouldn't discover through normal code exploration. Only list doc/rule files, NOT code directories or scripts.}
 
 - `ARCHITECTURE.md`: system architecture and package structure
 - `.comate/rules/`: project-specific development rules (if present)
 - `.comate/specs/`: historical spec documents from spec-mode tasks (if present)
-- {other docs, rule directories, or reference files worth reading}
+- {other doc files or rule directories}
 ```
 
 ### ARCHITECTURE.md
@@ -119,6 +126,7 @@ Exclude:
 - long tutorials or exhaustive file trees
 - obvious language conventions
 - speculative claims or anything you could not verify
+- **guessed tool/platform names**: if you cannot find the exact name of an internal tool, platform, or service in the codebase, do NOT guess, either ask the user or leave it out. Many internal tools (code review systems, issue trackers, CI platforms) have names that look similar to open-source equivalents but are not the same.
 
 When in doubt, omit.
 
