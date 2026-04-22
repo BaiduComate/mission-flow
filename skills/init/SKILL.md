@@ -19,6 +19,7 @@ Then spawn two sub-agent to explore:
 
 1. Explore project's existing instruction files (`AGENTS.md`, `CLAUDE.md`, `.comate/rules/`, `.cursor/rules/` and so on) and cross-check these files against the actual codebase.
 2. Infer the development workflow from actual practices: examine branch names (`git branch -a`), recent merge/PR history (`git log --merges`), CI config, and any contribution guides to determine the branching model, PR/CR flow, and release process.
+3. Infer coding style from formatter/linter configs and actual source files: indentation (tabs/spaces, width), quotes (single/double), naming conventions (camelCase, snake_case, CONST_CASE for variables, functions, types, files), import style, and any other project-specific style rules that differ from language defaults.
 
 - **DON'T** read these files directly because they are **unverified claims**.
 - **DON'T** ask the sub-agent to report discrepancies or errors, the main agent does not need that. Only use the verified output as input for writing `AGENTS.md`.
@@ -81,6 +82,11 @@ Generate two files: `AGENTS.md` as a navigation map, and `ARCHITECTURE.md` as a 
 {5-10 bullets. Each one is a trap an agent would fall into without warning.
  Merge formatting, linting, TypeScript, conventions, testing quirks — all here as flat bullets.
  No sub-sections.}
+
+## Coding Style
+
+{Only list conventions that differ from language/framework defaults. Skip if the project uses standard defaults.
+ Example bullets: `dprint (not Prettier), 4-space indent, single quotes, 120-char lines` / `file names: kebab-case` / `constants: UPPER_SNAKE_CASE`}
 
 ## Workflow
 
