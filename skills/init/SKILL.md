@@ -15,7 +15,10 @@ Read the highest-value sources first:
 - build, test, lint, formatter, typecheck, and codegen config
 - CI workflows and pre-commit / task runner config
 
-Then spawn an **Explore sub-agent** to explore project's existing instruction files (`AGENTS.md`, `CLAUDE.md`, `.comate/rules/`, `.cursor/rules/` and so on) and cross-check these files against the actual codebase.
+Then spawn two sub-agent to explore:
+
+1. Explore project's existing instruction files (`AGENTS.md`, `CLAUDE.md`, `.comate/rules/`, `.cursor/rules/` and so on) and cross-check these files against the actual codebase.
+2. Infer the development workflow from actual practices: examine branch names (`git branch -a`), recent merge/PR history (`git log --merges`), CI config, and any contribution guides to determine the branching model, PR/CR flow, and release process.
 
 - **DON'T** read these files directly because they are **unverified claims**.
 - **DON'T** ask the sub-agent to report discrepancies or errors, the main agent does not need that. Only use the verified output as input for writing `AGENTS.md`.
@@ -71,6 +74,12 @@ Generate two files: `AGENTS.md` as a navigation map, and `ARCHITECTURE.md` as a 
 {5-10 bullets. Each one is a trap an agent would fall into without warning.
  Merge formatting, linting, TypeScript, conventions, testing quirks — all here as flat bullets.
  No sub-sections.}
+
+## Workflow
+
+{Branching model, PR/CR flow, release process. Example:
+ `master` (always releasable) → `release-YYYYMMDD` (release branches) → `feature-*` (feature branches off release)
+ Keep to 3-5 lines max.}
 
 ## Project Map
 
