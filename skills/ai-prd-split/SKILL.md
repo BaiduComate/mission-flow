@@ -70,20 +70,7 @@ description: Use when splitting a PRD or technical doc into structured iCafe tas
 
 **跳过条件：** 用户明确说明是新项目，跳过本步骤，拆分时注明"均为新增模块"。
 
-### 第三步：澄清歧义（按需，含代码库不确定项）
-
-文档描述不明确，或代码库调研存在不确定项时，**必须**使用 question 工具询问用户。
-
-**触发澄清的场景：**
-
-- 功能边界不清晰
-- 无法判断是前端还是服务端任务
-- 文档提及功能但未说明具体行为
-- 代码库调研报告中标注的不确定项
-
-**严禁：** 基于"常识"或"最佳实践"推断未在文档中明确描述的功能（如配置页面、管理后台、监控报表等）。
-
-### 第四步：拆分任务
+### 第三步：拆分任务
 
 **每张卡必须满足：**
 
@@ -126,7 +113,7 @@ description: Use when splitting a PRD or technical doc into structured iCafe tas
 语法：`【SDD】【<端名称>】【<模块/服务名>】<功能描述>`
 示例：`【SDD】【服务端】【Bot Gateway】WebSocket 连接管理与协议编解码开发`
 
-### 第五步：展示并等待用户确认
+### 第四步：展示并等待用户确认
 
 ```
 需求拆分完成
@@ -161,7 +148,7 @@ description: Use when splitting a PRD or technical doc into structured iCafe tas
 
 **HARD-GATE：** 必须等待用户明确确认后才能创建卡片。用户取消或超时未响应，终止流程，不创建。若用户未指定 iCafe 空间，询问后再继续。
 
-### 第六步：创建卡片
+### 第五步：创建卡片
 
 用户确认后，调用 `icafe-card-assistant`，参考 `references/action.md` 执行卡片创建。
 
