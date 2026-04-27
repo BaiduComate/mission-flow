@@ -1,4 +1,4 @@
-职责：将拆分结果转换为 iCafe 卡片创建请求，调用 `icafe-card-assistant` 执行创建。
+职责：将拆分结果转换为 iCafe 卡片创建请求，调用 `icafe` skill（通过 `icafe-cli` 命令行工具）执行创建。
 
 ## 卡片字段映射
 

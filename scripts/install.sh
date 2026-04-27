@@ -10,7 +10,12 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILLS_SRC="$SCRIPT_DIR/skills"
+SKILLS_SRC="$(cd "$SCRIPT_DIR/.." && pwd)/skills"
+
+if [[ ! -d "$SKILLS_SRC" ]]; then
+  echo "ERROR: skills source directory not found: $SKILLS_SRC" >&2
+  exit 1
+fi
 
 FORCE=false
 if [[ "${1:-}" == "-f" || "${1:-}" == "--force" ]]; then
@@ -30,17 +35,18 @@ echo "Linking skills → $TARGET_DIR"
 echo ""
 
 for skill_path in "$SKILLS_SRC"/*/; do
+  skill_path="${skill_path%/}"
   skill_name="$(basename "$skill_path")"
   link="$TARGET_DIR/$skill_name"
 
   if [[ -L "$link" ]]; then
     current_target="$(readlink "$link")"
-    if [[ "$current_target" == "$skill_path" ]]; then
+    if [[ "${current_target%/}" == "$skill_path" ]]; then
       echo "  [skip]   $skill_name (already linked)"
       continue
     else
       echo "  [update] $skill_name ($current_target → $skill_path)"
-      ln -sf "$skill_path" "$link"
+      ln -sfn "$skill_path" "$link"
     fi
   elif [[ -e "$link" ]]; then
     if [[ "$FORCE" == true ]]; then

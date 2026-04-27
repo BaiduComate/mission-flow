@@ -16,7 +16,7 @@
 
 | 来源类型 | 处理方式                                                  |
 | -------- | --------------------------------------------------------- |
-| `ku-url` | 使用 `ku-doc-manage` skill 读取，从 URL 末段提取 `doc_id` |
+| `ku-url` | 使用 `ku-operator` skill 读取，从 URL 末段提取 `docGuid`（对应 `--doc-id` 参数） |
 | `file`   | 使用 Read 工具读取本地文件                                |
 | `url`    | 使用 WebFetch 工具抓取                                    |
 
