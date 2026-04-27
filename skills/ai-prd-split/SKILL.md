@@ -5,12 +5,12 @@ description: Use when splitting a PRD or technical doc into structured iCafe tas
 
 # 需求拆分助手
 
-**Announce at start:** "我正在使用 ai-prd-split skill 来拆分文档。"
+**Announce at start:** "我正在使用 ai-prd-split skill 来拆分需求。"
 
 ## 依赖技能
 
-- `icafe-official`：创建 iCafe 卡片及绑定父子关系
-- `ku-doc-manage`：读取知识库文档
+- `icafe`：创建 iCafe 卡片及绑定父子关系
+- `ku-operator`：读取知识库文档
 
 ## 流程
 
@@ -150,7 +150,7 @@ description: Use when splitting a PRD or technical doc into structured iCafe tas
 
 ### 第五步：创建卡片
 
-用户确认后，调用 `icafe-card-assistant`，参考 `references/action.md` 执行卡片创建。
+用户确认后，调用 `icafe` skill（`icafe-cli` 命令行工具），参考 `references/action.md` 执行卡片创建。
 
 - 创建卡片类型：1 个 Feature 类型和若干个 Story 的卡片
 - Feature 卡片使用 Feature 描述模板，Story 卡片使用 Story 描述模板。

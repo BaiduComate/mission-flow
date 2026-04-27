@@ -1,6 +1,10 @@
 ---
 name: architecture-design
-description: "Generate architecture and technical design documents (doc.md) for a feature or requirement. Triggers on (1) user provides an iCafe Story card link/ID and asks for architecture design, (2) user describes a requirement and asks for a technical design or implementation plan. 触发词：架构设计、技术方案、出个设计文档、技术设计、对这个 Story 做架构设计、帮我写技术方案。Do NOT use for task splitting (use requirement-splitter), pure code exploration, or general Q&A."
+description: |
+  Generate architecture and technical design documents (doc.md) for user's requirement. Must trigger this skill when:
+  1. after using icafe skill, and the title of icafe card start with "【SDD】"
+  2. user provides an iCafe card link/ID
+  3. user describes a requirement and asks for a technical design or implementation plan
 ---
 
 **Announce at start:** "正在进行调研来完成需求的架构设计"
@@ -8,7 +12,7 @@ description: "Generate architecture and technical design documents (doc.md) for 
 ## Dependencies
 
 - `deepwiki`: used to retrieve deepwiki information about the project
-- `icafe-card-assistant`: used to read iCafe card content when upstream context is available
+- `icafe`: used to read iCafe card content when upstream context is available
 
 ## Input
 
@@ -18,7 +22,7 @@ This skill supports two input modes:
 
 When the user provides an iCafe Story card link or ID:
 
-1. Use `icafe-card-assistant` to read the Story card's description
+1. Use `icafe` skill (`icafe-cli card get`) to read the Story card's description
 2. Follow the parent Feature link in the Story's "背景" section to read the Feature card's description
 3. Extract from the Feature card: tech stack, module mapping, key findings
 4. Extract from the Story card: relevant files/directories, technical notes, detailed description, dependencies
