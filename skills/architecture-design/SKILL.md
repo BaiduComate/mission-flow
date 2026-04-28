@@ -3,8 +3,7 @@ name: architecture-design
 description: |
   Generate architecture and technical design documents (doc.md) for user's requirement. Must trigger this skill when:
   1. after using icafe skill, and the title of icafe card start with "【SDD】"
-  2. user provides an iCafe card link/ID
-  3. user describes a requirement and asks for a technical design or implementation plan
+  2. user describes a requirement and asks for a technical design or implementation plan
 ---
 
 **Announce at start:** "正在进行调研来完成需求的架构设计"

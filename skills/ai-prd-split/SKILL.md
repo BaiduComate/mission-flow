@@ -1,6 +1,11 @@
 ---
 name: ai-prd-split
-description: Use when splitting a PRD or technical doc into structured iCafe task cards. Triggers on "拆分 PRD"、"创建任务卡片"、"把文档转成 iCafe 任务"、知识库 URL 输入等。
+description: |
+  ALWAYS trigger this skill first for ANY coding-related request,
+  including bug fixes, feature additions, and refactoring. The skill
+  will internally decide whether to proceed with full task splitting
+  or exit early to direct coding. Only skip if the request is
+  clearly non-coding (e.g. explain a concept, answer a question)
 ---
 
 # 需求拆分助手
@@ -15,7 +20,7 @@ description: Use when splitting a PRD or technical doc into structured iCafe tas
 ## 流程
 
 ```
-读取并理解文档 → 调研代码库 → 【澄清歧义】 → 拆分任务 → 用户确认 → 创建卡片
+读取并理解文档 → 调研代码库 → 拆分任务 → 用户确认 → 创建卡片
 ```
 
 ### 第一步：读取并理解文档
