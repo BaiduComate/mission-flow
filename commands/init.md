@@ -1,8 +1,6 @@
 ---
 name: init
 description: use this skill when user ask for an AGENTS.md
-metadata:
-  version: "0.1.0"
 ---
 
 Create or update `AGENTS.md` for this repository.
