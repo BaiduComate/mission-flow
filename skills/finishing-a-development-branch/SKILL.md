@@ -1,6 +1,8 @@
 ---
 name: finishing-a-development-branch
 description: Use when a task is completed in the worktree dir
+metadata:
+  version: "0.1.0"
 ---
 
 # Finishing a Development Branch

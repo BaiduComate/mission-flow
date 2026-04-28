@@ -6,6 +6,8 @@ description: |
   will internally decide whether to proceed with full task splitting
   or exit early to direct coding. Only skip if the request is
   clearly non-coding (e.g. explain a concept, answer a question)
+metadata:
+  version: "0.1.0"
 ---
 
 # 需求拆分助手

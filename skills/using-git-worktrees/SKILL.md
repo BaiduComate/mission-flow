@@ -1,6 +1,8 @@
 ---
 name: using-git-worktrees
 description: Use when starting feature work that needs isolation from current workspace or before executing implementation plans
+metadata:
+  version: "0.1.0"
 ---
 
 # Using Git Worktrees
