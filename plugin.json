@@ -1,7 +1,7 @@
 {
   "name": "mission-flow",
   "displayName": "Mission Flow",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "工作流技能集合：需求拆分、架构设计、文档阅读、Git工作流",
   "keywords": ["skills", "workflow", "icafe", "architecture", "deepwiki", "git"]
 }
