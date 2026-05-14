@@ -25,8 +25,8 @@ You MUST create a task for each of these items and complete them in order:
 2. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 3. **Propose 2-3 approaches** — with trade-offs and your recommendation
 4. **Present design** — in sections scaled to their complexity, get user approval after each section
-5. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-6. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+5. **Write design doc** — save to `.comate/specs/{feature_name}/doc.md` and commit
+6. **Spec review** — dispatch a subagent to review for placeholders, contradictions, ambiguity, scope (see below)
 7. **User reviews written spec** — ask user to review the spec file before proceeding
 8. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
@@ -40,8 +40,10 @@ flowchart TD
     D --> E{User approves design?}
     E -->|"no, revise"| D
     E -->|yes| F[Write design doc]
-    F --> G["Spec self-review<br/>(fix inline)"]
-    G --> H{User reviews spec?}
+    F --> G["Spec review<br/>(subagent)"]
+    G --> G2{Review passes?}
+    G2 -->|"issues found"| F
+    G2 -->|passes| H{User reviews spec?}
     H -->|"changes requested"| F
     H -->|approved| I((Invoke writing-plans skill))
 ```
@@ -91,25 +93,23 @@ flowchart TD
 
 **Documentation:**
 
-- Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
-  - (User preferences for spec location override this default)
-- Use elements-of-style:writing-clearly-and-concisely skill if available
+- Write the validated design (spec) to `.comate/specs/{feature_name}/doc.md`
 - Commit the design document to git
 
-**Spec Self-Review:**
-After writing the spec document, look at it with fresh eyes:
+**Spec Review (via subagent):**
+After writing the spec document, dispatch a subagent using the prompt template in `spec-document-reviewer-prompt.md` to review the spec. The subagent checks for:
 
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
+1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements?
 2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
 3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+4. **Ambiguity check:** Could any requirement be interpreted two different ways?
 
-Fix any issues inline. No need to re-review — just fix and move on.
+If the subagent returns issues, fix them inline and re-dispatch the review until it passes.
 
 **User Review Gate:**
 After the spec review loop passes, ask the user to review the written spec before proceeding:
 
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+> "Spec written and committed to `.comate/specs/{feature_name}/doc.md`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
 
 Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
 
