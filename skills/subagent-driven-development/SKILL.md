@@ -141,6 +141,3 @@ Never:
 - **writing-plans** - Creates the plan this skill executes
 - **requesting-code-review** - Code review template for reviewer subagents
 - **finishing-a-development-branch** - Complete development after all tasks
-
-**Subagents should use:**
-- **test-driven-development** - Subagents follow TDD for each task
