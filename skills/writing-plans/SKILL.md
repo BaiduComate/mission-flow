@@ -15,7 +15,9 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Context:** If working in an isolated worktree, it should have been created via the `using-git-worktrees` skill at execution time.
 
-**Save plans to:** `.comate/specs/{feature_name}/tasks.md`
+**Save plans to:** `.comate/specs/{feature_name}/tasks/`
+- Index: `.comate/specs/{feature_name}/tasks/index.md`
+- Task files: `.comate/specs/{feature_name}/tasks/task-N-<short-name>.md`
 
 ## Scope Check
 
@@ -41,6 +43,22 @@ This structure informs the task decomposition. Each task should produce self-con
 - "Run the tests and make sure they pass" - step
 - "Commit" - step
 
+## Plan File Layout
+
+Write the plan as multiple files to keep each write stable and each task easy to hand off independently.
+
+**Index file (`tasks/index.md`) contains only:**
+- The plan header below
+- Task list with links to task files
+- Execution handoff
+
+**Each task file contains exactly one task:**
+- Start with `# Task N: [Component Name]`
+- Include the `Files` section and all steps for that task
+- Repeat any code, commands, or context needed for that task; task files must be usable without reading previous task files
+
+Prefer adding another task file over making any single file long. This is a reliability measure: smaller writes are less likely to fail and easier to recover.
+
 ## Plan Document Header
 
 **Every plan MUST start with this header:**
@@ -61,8 +79,10 @@ This structure informs the task decomposition. Each task should produce self-con
 
 ## Task Structure
 
+Write this structure in `tasks/task-N-<short-name>.md`, not inline in `tasks/index.md`.
+
 ````markdown
-### Task N: [Component Name]
+# Task N: [Component Name]
 
 **Files:**
 - Create: `exact/path/to/file.py`
@@ -122,11 +142,13 @@ Every step must contain the actual content an engineer needs. These are **plan f
 
 After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
 
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task file that implements it? List any gaps.
 
-**2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
+**2. Placeholder scan:** Search all plan files for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
 
 **3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+
+**4. Link integrity:** Every task listed in `tasks/index.md` links to an existing task file. Every task file is linked from `tasks/index.md`.
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
@@ -134,7 +156,7 @@ If you find issues, fix them inline. No need to re-review — just fix and move 
 
 After saving the plan, proceed with subagent-driven execution:
 
-**"Plan complete and saved to `.comate/specs/{feature_name}/tasks.md`. Starting subagent-driven execution — dispatching a fresh subagent per task with review between tasks."**
+**"Plan complete and saved to `.comate/specs/{feature_name}/tasks/index.md`. Task files are in `.comate/specs/{feature_name}/tasks/`. Starting subagent-driven execution — dispatching a fresh subagent per task with review between tasks."**
 
 - **REQUIRED SUB-SKILL:** Use subagent-driven-development
 - Fresh subagent per task + two-stage review
