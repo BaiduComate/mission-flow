@@ -5,11 +5,11 @@ description: Use when executing implementation plans with independent tasks in t
 
 # Subagent-Driven Development
 
-Execute plan by dispatching fresh subagent per task, with two-stage review after each: spec compliance review first, then code quality review.
+Execute plan by dispatching fresh subagents per task: one implementer, then one spec compliance reviewer, then one code quality reviewer.
 
 **Why subagents:** You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.
 
-**Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
+**Core principle:** Every task gets exactly this sequence: implementer -> spec compliance reviewer -> code quality reviewer. Spec review must pass before quality review starts.
 
 **Continuous execution:** Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are: BLOCKED status you cannot resolve, ambiguity that genuinely prevents progress, or all tasks complete. "Should I continue?" prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.
 
@@ -34,6 +34,13 @@ flowchart TD
 
 
 ## The Process
+
+For each task, dispatch three separate subagents in order:
+1. **Implementer:** implements the task contract, tests, commits, self-reviews, reports status.
+2. **Spec compliance reviewer:** verifies the result satisfies the task goal, scope, acceptance criteria, and constraints.
+3. **Code quality reviewer:** reviews code quality only after spec compliance passes.
+
+The implementer self-review is not a review stage. The code quality reviewer does not replace the spec compliance reviewer.
 
 ```mermaid
 flowchart TD
@@ -91,7 +98,7 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 You: I'm using Subagent-Driven Development to execute this plan.
 
 [Read plan once: .comate/specs/{feature_name}/tasks.md]
-[Extract every task with full text, files, commands, and acceptance criteria]
+[Extract every task with goal, scope, context, files, acceptance criteria, constraints, and verification]
 [Create TodoWrite with all tasks]
 
 Task 1: [Task title]
