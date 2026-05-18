@@ -7,17 +7,15 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+Write implementation plans as task contracts: goal, scope, context, acceptance criteria, constraints, and verification. Leave implementation choices to the implementer unless the spec requires a specific detail.
 
-Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+Assume the implementer is skilled, but new to this codebase and domain.
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
 **Context:** If working in an isolated worktree, it should have been created via the `using-git-worktrees` skill at execution time.
 
-**Save plans to:** `.comate/specs/{feature_name}/tasks/`
-- Index: `.comate/specs/{feature_name}/tasks/index.md`
-- Task files: `.comate/specs/{feature_name}/tasks/task-N-<short-name>.md`
+**Save plans to:** `.comate/specs/{feature_name}/tasks.md`
 
 ## Scope Check
 
@@ -36,28 +34,11 @@ This structure informs the task decomposition. Each task should produce self-con
 
 ## Bite-Sized Task Granularity
 
-**Each step is one action (2-5 minutes):**
-- "Write the failing test" - step
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
-- "Commit" - step
+Each task is one coherent implementation unit that a subagent can complete, test, commit, and report back on.
 
-## Plan File Layout
-
-Write the plan as multiple files to keep each write stable and each task easy to hand off independently.
-
-**Index file (`tasks/index.md`) contains only:**
-- The plan header below
-- Task list with links to task files
-- Execution handoff
-
-**Each task file contains exactly one task:**
-- Start with `# Task N: [Component Name]`
-- Include the `Files` section and all steps for that task
-- Repeat any code, commands, or context needed for that task; task files must be usable without reading previous task files
-
-Prefer adding another task file over making any single file long. This is a reliability measure: smaller writes are less likely to fail and easier to recover.
+- Use goal-based tasks, not mechanical micro-steps.
+- Do not split one natural task into "write test", "implement", "run tests", and "commit" tasks.
+- Acceptance criteria define success; constraints define boundaries.
 
 ## Plan Document Header
 
@@ -66,7 +47,7 @@ Prefer adding another task file over making any single file long. This is a reli
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-driven-development (recommended) or executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -79,76 +60,76 @@ Prefer adding another task file over making any single file long. This is a reli
 
 ## Task Structure
 
-Write this structure in `tasks/task-N-<short-name>.md`, not inline in `tasks/index.md`.
+Write one section like this per task in `tasks.md`.
 
 ````markdown
-# Task N: [Component Name]
+### Task N: [Component Name]
 
-**Files:**
-- Create: `exact/path/to/file.py`
-- Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
+## Goal
+[Observable outcome this task must produce]
 
-- [ ] **Step 1: Write the failing test**
+## Context
+[How this task fits the approved `doc.md`, architecture, and nearby tasks]
 
-```python
-def test_specific_behavior():
-    result = function(input)
-    assert result == expected
-```
+## Scope
+- In scope: [what this task may change]
+- Out of scope: [nearby work this task must not do]
 
-- [ ] **Step 2: Run test to verify it fails**
+## Relevant Files
+- Likely modify: `exact/path/to/existing.py`
+- Likely create: `exact/path/to/new_file.py`
+- Reference: `exact/path/to/reference.py`
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
+## Acceptance Criteria
+- [ ] [Observable behavior or deliverable]
+- [ ] [Important edge case or failure behavior]
+- [ ] [Integration expectation]
+- [ ] [Regression expectation]
 
-- [ ] **Step 3: Write minimal implementation**
+## Testing Expectations
+- Unit tests: [specific behaviors to cover]
+- Integration/E2E or runtime verification: [if available]
+- Commands: `exact command to run`
+- Expected result: [what should pass or be observable]
 
-```python
-def function(input):
-    return expected
-```
+## Constraints
+- [Required API, compatibility, dependency, style, or architecture constraint]
 
-- [ ] **Step 4: Run test to verify it passes**
-
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add tests/path/test.py src/path/file.py
-git commit -m "feat: add specific feature"
-```
+## Notes
+[Only non-obvious guidance. Do not prescribe implementation unless required.]
 ````
 
 ## No Placeholders
 
-Every step must contain the actual content an engineer needs. These are **plan failures** — never write them:
+Every task must contain a concrete contract. These are **plan failures**:
 - "TBD", "TODO", "implement later", "fill in details"
-- "Add appropriate error handling" / "add validation" / "handle edge cases"
-- "Write tests for the above" (without actual test code)
-- "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
-- Steps that describe what to do without showing how (code blocks required for code steps)
+- "Add appropriate error handling" / "add validation" / "handle edge cases" without saying which cases matter
+- "Write tests" without concrete behaviors, commands, and expected results
+- "Similar to Task N" without repeating the relevant context
+- Prescribing every line of code when goal and constraints are enough
 - References to types, functions, or methods not defined in any task
 
 ## Remember
 - Exact file paths always
-- Complete code in every step — if a step changes code, show the code
-- Exact commands with expected output
+- Outcomes and acceptance criteria over implementation scripts
+- Exact verification commands with expected output
+- Prefer behavior-level verification: unit tests plus integration/runtime checks when available.
+- Do not include full implementation code unless the exact code/API/config is itself the requirement
 - DRY, YAGNI, TDD, frequent commits
 
 ## Self-Review
 
 After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
 
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task file that implements it? List any gaps.
+**1. Spec coverage:** Can every spec requirement be traced to a task? List gaps.
 
-**2. Placeholder scan:** Search all plan files for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
+**2. Placeholder scan:** Search for the red flags above. Fix them.
 
-**3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+**3. Type consistency:** Do names, APIs, and data shapes match across tasks?
 
-**4. Link integrity:** Every task listed in `tasks/index.md` links to an existing task file. Every task file is linked from `tasks/index.md`.
+**4. Implementation freedom:** If a task reads like a typing script, rewrite it as outcomes and acceptance criteria.
+
+**5. Verification realism:** Include runtime or integration verification when the environment allows it.
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
@@ -156,7 +137,7 @@ If you find issues, fix them inline. No need to re-review — just fix and move 
 
 After saving the plan, proceed with subagent-driven execution:
 
-**"Plan complete and saved to `.comate/specs/{feature_name}/tasks/index.md`. Task files are in `.comate/specs/{feature_name}/tasks/`. Starting subagent-driven execution — dispatching a fresh subagent per task with review between tasks."**
+**"Plan complete and saved to `.comate/specs/{feature_name}/tasks.md`. Starting subagent-driven execution — dispatching a fresh subagent per task with review between tasks."**
 
 - **REQUIRED SUB-SKILL:** Use subagent-driven-development
 - Fresh subagent per task + two-stage review
