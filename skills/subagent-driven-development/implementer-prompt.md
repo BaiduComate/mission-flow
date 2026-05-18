@@ -29,7 +29,7 @@ Task tool (general-purpose):
     ## Your Job
 
     Once you're clear on requirements:
-    1. Implement exactly what the task specifies
+    1. Satisfy the task goal and acceptance criteria within the documented scope and constraints
     2. Write tests (following TDD if task says to)
     3. Verify implementation works
     4. Commit your work
@@ -75,9 +75,10 @@ Task tool (general-purpose):
     Review your work with fresh eyes. Ask yourself:
 
     **Completeness:**
-    - Did I fully implement everything in the spec?
-    - Did I miss any requirements?
-    - Are there edge cases I didn't handle?
+    - Does the implementation satisfy the task goal?
+    - Does it meet every acceptance criterion?
+    - Did I stay inside scope and follow constraints?
+    - Are there edge cases from the task I didn't handle?
 
     **Quality:**
     - Is this my best work?
