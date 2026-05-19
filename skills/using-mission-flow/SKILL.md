@@ -1,91 +1,52 @@
 ---
 name: using-mission-flow
-description: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions
+description: 在任何对话开始时使用。建立如何查找和使用 skills 的流程和概念，子 agent 禁止使用。用来指导 Agent 如何使用 skill
 ---
 
-<SUBAGENT-STOP>
-If you were dispatched as a subagent to execute a specific task, skip this skill.
-</SUBAGENT-STOP>
+> [!IMPORTANT]
+> 如果你是作为 subagent 被派发来执行某个具体任务，请跳过这个 skill。
 
-<EXTREMELY-IMPORTANT>
-If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+## 指令优先级
 
-IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+Mission flow skills 覆盖默认 system prompt 行为，但**用户指令始终优先**：
 
-This is not negotiable. This is not optional. You cannot rationalize your way out of this.
+1. **用户的显式指令**（AGENTS.md、直接请求）是最高优先级
+2. **Mission flow skills** 在冲突时覆盖默认系统行为
+3. **默认 system prompt** 是最低优先级
 
-You **MUST** respond to the user in the language they input, with a preference for Chinese.
-</EXTREMELY-IMPORTANT>
+如果 AGENTS.md 说“不要使用 TDD”，而某个 skill 说“始终使用 TDD”，遵循用户指令。用户拥有控制权。
 
-## Instruction Priority
+# Skills 使用规则
 
-Mission flow skills override default system prompt behavior, but **user instructions always take precedence**:
+## 规则
 
-1. **User's explicit instructions** (AGENTS.md, direct requests) — highest priority
-2. **Mission flow skills** — override default system behavior where they conflict
-3. **Default system prompt** — lowest priority
+**在任何回复或行动之前调用相关或被请求的 skills。** 哪怕只有 1% 的可能性适用，也意味着你应该调用 skill 来确认。如果发现调用后的 skill 不适合当前情况，你可以不使用它。
 
-If AGENTS.md says "don't use TDD" and a skill says "always use TDD," follow the user's instructions. The user is in control.
+## 危险信号
 
-# Using Skills
+出现这些想法时请停止，这是在给自己开脱：
 
-## The Rule
+| 想法                   | 现实                          |
+| -------------------- | --------------------------- |
+| “这只是一个简单问题”          | 问题也是任务。检查 skills。           |
+| “我需要先获得更多上下文”        | skill 检查发生在澄清问题之前。          |
+| “让我先探索代码库”           | skills 会告诉你如何探索。先检查。        |
+| “我可以快速看一下 git/files” | 文件缺少对话上下文。检查 skills。        |
+| “让我先收集信息”            | skills 会告诉你如何收集信息。          |
+| “这不需要正式 skill”       | 如果 skill 存在，就使用它。           |
+| “我记得这个 skill”        | skills 会演进。读取当前版本。          |
+| “这不算任务”              | 行动 = 任务。检查 skills。          |
+| “这个 skill 太重了”       | 简单事情也会变复杂。使用它。              |
+| “我就先做这一件事”           | 在做任何事之前检查。                  |
+| “这样感觉很高效”            | 无纪律的行动会浪费时间。skills 会防止这种情况。 |
+| “我知道那是什么意思”          | 知道概念 ≠ 使用 skill。调用它。        |
 
-**Invoke relevant or requested skills BEFORE any response or action.** Even a 1% chance a skill might apply means that you should invoke the skill to check. If an invoked skill turns out to be wrong for the situation, you don't need to use it.
+## Skill 优先级
 
-```mermaid
-flowchart TD
-    A((User message received)) --> C
-    B((About to EnterPlanMode?)) --> D
-    C{Might any skill apply?} -->|"yes, even 1%"| E[Invoke Skill tool]
-    C -->|"definitely not"| K((Respond))
-    D{Already brainstormed?} -->|no| F[Invoke brainstorming skill]
-    D -->|yes| C
-    F --> C
-    E --> G["Announce: 'Using [skill] to [purpose]'"]
-    G --> H{Has checklist?}
-    H -->|yes| I[Create TodoWrite todo per item]
-    H -->|no| J[Follow skill exactly]
-    I --> J
-```
+当多个 skills 都可能适用时，按以下顺序使用：
 
-## Red Flags
+1. **流程类 skills 优先**（brainstorming、debugging）：它们决定如何处理任务
+2. **实现类 skills 其次**（create-skill、create-rule）：它们指导执行
 
-These thoughts mean STOP—you're rationalizing:
-
-| Thought | Reality |
-|---------|---------|
-| "This is just a simple question" | Questions are tasks. Check for skills. |
-| "I need more context first" | Skill check comes BEFORE clarifying questions. |
-| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
-| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
-| "Let me gather information first" | Skills tell you HOW to gather information. |
-| "This doesn't need a formal skill" | If a skill exists, use it. |
-| "I remember this skill" | Skills evolve. Read current version. |
-| "This doesn't count as a task" | Action = task. Check for skills. |
-| "The skill is overkill" | Simple things become complex. Use it. |
-| "I'll just do this one thing first" | Check BEFORE doing anything. |
-| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
-| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
-
-## Skill Priority
-
-When multiple skills could apply, use this order:
-
-1. **Process skills first** (brainstorming, debugging) - these determine HOW to approach the task
-2. **Implementation skills second** (frontend-design, mcp-builder) - these guide execution
-
-"Let's build X" → brainstorming first, then implementation skills.
-"Fix this bug" → debugging first, then domain-specific skills.
-
-## Skill Types
-
-**Rigid** (TDD, debugging): Follow exactly. Don't adapt away discipline.
-
-**Flexible** (patterns): Adapt principles to context.
-
-The skill itself tells you which.
-
-## User Instructions
-
-Instructions say WHAT, not HOW. "Add X" or "Fix Y" doesn't mean skip workflows.
+“Let's build X” → 先 brainstorming，再使用实现类 skills。
+“Fix this bug” → 先 debugging，再使用领域特定 skills。
