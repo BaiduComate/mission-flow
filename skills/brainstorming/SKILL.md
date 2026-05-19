@@ -1,129 +1,126 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+description: 必须在任何创造性工作之前使用，比如创建功能、构建组件、添加能力或修改代码行为
 ---
 
-# Brainstorming Ideas Into Designs
+## 目标
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+通过对话帮助用户把想法转化为完整的设计文档。流程如下：
 
-Start by understanding the current project context, then ask clarifying questions to refine the idea. Batch independent questions into a single message, and only split into multiple rounds when later questions truly depend on earlier answers. Once you understand what you're building, present the design and get user approval.
+1. 理解当前项目上下文
+2. 提出澄清问题来细化想法
+3. 理解要构建的内容后，展示设计请求用户审阅和批准
 
-<HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
-</HARD-GATE>
+> [!IMPORTANT]
+> 无论项目看起来多简单，在你展示设计并获得用户批准之前，不要调用任何实现类 skill 或者编写代码。
+> 每个项目都要经过这个流程，简单项目最容易因为未经检查的假设而浪费用户精力。设计可以很短（真正简单的项目用几句话即可），但你必须展示它并获得批准。
 
-## Anti-Pattern: "This Is Too Simple To Need A Design"
+## 流程
 
-Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+### Checklist
 
-## Checklist
+你**必须**使用 TodoWrite 工具为下面所有的列表项创建一个 TODO 条目，并按顺序完成：
 
-You MUST create a task for each of these items and complete them in order:
+1. 探索项目上下文
+2. 提出澄清问题
+3. 提出 2-3 个方案
+4. 展示设计
+5. 编写设计文档
+6. 设计审查
+7. 用户审查已写好的 `doc.md`
+8. 过渡到实现
 
-1. **Explore project context** — check files, docs, recent commits
-2. **Ask clarifying questions** — batch independent questions in one message; split rounds only when later questions depend on earlier answers.
-3. **Propose 2-3 approaches** — with trade-offs and your recommendation
-4. **Present design** — in sections scaled to their complexity, get user approval after each section
-5. **Write design doc** — save to `.comate/specs/{feature_name}/doc.md` and commit
-6. **Spec review** — dispatch a subagent to review for placeholders, contradictions, ambiguity, scope (see below)
-7. **User reviews written spec** — ask user to review the spec file before proceeding
-8. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+### 详细流程
 
-## Process Flow
+#### 探索项目上下文
+
+- 先检查当前项目状态（文件、文档、最近提交）
+- 聚焦理解目的、约束和成功标准
+
+#### 提出澄清问题
+
+- **必须**使用 question 工具提问，将独立问题合并到一条消息中；只有当后续问题依赖先前答案时才拆成多轮提问。
+
+#### 提出 2-3 个方案
+
+- **必须**使用 question 工具提问，每个问题都要包含你的推荐项，每个问题的条目都要包含为什么给出该选项的权衡，等待用户选择或者修正。
+
+#### 展示设计
+
+- 按复杂度分章节展示，每节后请求用户审阅和批准
+- 当你认为已理解要构建的内容后，展示设计
+- 每个章节按复杂度调整长度：简单时几句话即可，复杂时最多 200-300 词
+- 每节后询问到目前为止是否正确
+- 覆盖架构、组件、数据流、错误处理和测试
+- 如果某些内容不清楚，准备返回并继续澄清
+
+#### 编写设计文档
+
+- 保存到 `.comate/specs/{feature_name}/doc.md` 并提交
+- 将已验证的设计写入 `.comate/specs/{feature_name}/doc.md`
+- 将设计文档提交到 git
+
+#### 设计审查
+
+- 派发 subagent 审查占位符、矛盾、歧义和范围
+- 写完设计文档后，使用 `design-document-reviewer-prompt.md` 中的提示词模板派发 subagent 审查。subagent 检查：
+  1. **占位符扫描：** 是否存在 “TBD”、“TODO”、不完整章节或含糊需求？
+  2. **内部一致性：** 各章节是否互相矛盾？架构是否匹配功能描述？
+  3. **范围检查：** 是否足够聚焦，能形成单个实现计划，还是需要拆解？
+  4. **歧义检查：** 是否有需求可能被解释成两种不同含义？
+- 如果 subagent 返回问题，直接修复并重新派发审查，直到通过。
+
+#### 用户审查已写好的 `doc.md`
+
+- 在继续前请用户审查 `doc.md` 文件
+- agent 进行完设计文档审查循环后，请用户在继续前进行审查：
+  > “设计文档已编写并提交至 `.comate/specs/{feature_name}/doc.md`。请您审阅，如果您想进行任何更改，请告诉我。”
+- 等待用户回复。如果用户要求修改，进行修改并重新运行审查循环。只有用户批准后才能继续。
+
+#### 过渡到实现
+
+调用 `writing-plans` skill 创建详细实现计划。不要调用任何其他 skill
+
+### 状态机
 
 ```mermaid
 flowchart TD
-    A[Explore project context] --> B[Ask clarifying questions]
-    B --> C[Propose 2-3 approaches]
-    C --> D[Present design sections]
-    D --> E{User approves design?}
-    E -->|"no, revise"| D
-    E -->|yes| F[Write design doc]
-    F --> G["Spec review<br/>(subagent)"]
-    G --> G2{Review passes?}
-    G2 -->|"issues found"| F
-    G2 -->|passes| H{User reviews spec?}
-    H -->|"changes requested"| F
-    H -->|approved| I((Invoke writing-plans skill))
+    A[探索项目上下文] --> B[提出澄清问题]
+    B --> C[提出 2-3 个方案]
+    C --> D[展示设计章节]
+    D --> E{用户批准设计?}
+    E -->|"否，修订"| D
+    E -->|是| F[编写设计文档]
+    F --> G["设计审查<br/>(subagent)"]
+    G --> G2{审查通过?}
+    G2 -->|"发现问题"| F
+    G2 -->|通过| H{用户审查设计文档?}
+    H -->|"要求修改"| F
+    H -->|批准| I((调用 writing-plans skill))
 ```
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+**终止状态是调用 writing-plans。** 不要调用 `frontend-design`、`mcp-builder` 或任何其他实现类 skill。`brainstorming` 后唯一调用的 skill 是 `writing-plans`。
 
-## The Process
+## 设计要点
 
-**Understanding the idea:**
+**为隔离性和清晰性设计：**
 
-- Check out the current project state first (files, docs, recent commits)
-- Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
-- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.
-- For appropriately-scoped projects, ask clarifying questions to refine the idea
-- Prefer multiple choice questions when possible, but open-ended is fine too
-- **Batch independent questions into a single message.** Avoid serial interrogation — asking 5 things across 5 messages wastes user time. Group questions that can be answered in parallel (e.g., "target users", "deployment target", "auth requirement") and ask them together, numbered, in one message.
-- **Split into a follow-up round only when there is a real dependency.** Example of a real dependency: choosing a frontend framework before asking which component library, because the framework constrains the available libraries. Example of a fake dependency: asking about database choice and logging library separately — these are independent and should be batched.
-- Focus on understanding: purpose, constraints, success criteria
+- 将系统拆分为更小的单元，每个单元有明确目的，通过定义良好的接口通信，并且可以独立理解和测试
+- 对每个单元，你都应该能回答：它做什么、如何使用它、它依赖什么？
+- 别人能否不读内部实现就理解一个单元的作用？你能否修改内部实现而不破坏使用方？如果不能，边界需要调整。
+- 更小且边界清晰的单元也更容易操作。你更擅长处理能一次装入上下文的代码；当文件职责单一且精确时，修改更可靠。文件变大通常意味着它承担了太多职责。
 
-**Exploring approaches:**
+**在现有代码库中工作：**
 
-- Propose 2-3 different approaches with trade-offs
-- Present options conversationally with your recommendation and reasoning
-- Lead with your recommended option and explain why
+- 提出变更前先探索当前结构。遵循现有模式。
+- 如果现有代码存在影响当前工作的缺陷（例如文件过大、边界不清、职责纠缠），将有针对性的改进纳入设计，就像优秀开发者会改进自己正在处理的代码一样。
+- 不要提出无关重构。只关注服务当前目标的内容。
 
-**Presenting the design:**
+## 关键原则
 
-- Once you believe you understand what you're building, present the design
-- Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
-- Ask after each section whether it looks right so far
-- Cover: architecture, components, data flow, error handling, testing
-- Be ready to go back and clarify if something doesn't make sense
-
-**Design for isolation and clarity:**
-
-- Break the system into smaller units that each have one clear purpose, communicate through well-defined interfaces, and can be understood and tested independently
-- For each unit, you should be able to answer: what does it do, how do you use it, and what does it depend on?
-- Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.
-- Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.
-
-**Working in existing codebases:**
-
-- Explore the current structure before proposing changes. Follow existing patterns.
-- Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
-- Don't propose unrelated refactoring. Stay focused on what serves the current goal.
-
-## After the Design
-
-**Documentation:**
-
-- Write the validated design (spec) to `.comate/specs/{feature_name}/doc.md`
-- Commit the design document to git
-
-**Spec Review (via subagent):**
-After writing the spec document, dispatch a subagent using the prompt template in `spec-document-reviewer-prompt.md` to review the spec. The subagent checks for:
-
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements?
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
-3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways?
-
-If the subagent returns issues, fix them inline and re-dispatch the review until it passes.
-
-**User Review Gate:**
-After the spec review loop passes, ask the user to review the written spec before proceeding:
-
-> "Spec written and committed to `.comate/specs/{feature_name}/doc.md`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
-
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
-
-**Implementation:**
-
-- Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
-
-## Key Principles
-
-- **Batch independent questions** - Group questions without dependencies into one message; only split rounds when answers genuinely gate later questions
-- **Multiple choice preferred** - Easier to answer than open-ended when possible
-- **YAGNI ruthlessly** - Remove unnecessary features from all designs
-- **Explore alternatives** - Always propose 2-3 approaches before settling
-- **Incremental validation** - Present design, get approval before moving on
-- **Be flexible** - Go back and clarify when something doesn't make sense
+- **优先使用 question 工具**：该方式比开放式问题更容易回答
+- **合并独立问题**：将没有依赖关系的问题合并到一条消息中；只有答案真正阻塞后续问题时才拆轮次
+- **严格 YAGNI**：从所有设计中移除不必要功能
+- **探索替代方案**：在确定方案前始终提出 2-3 个方案
+- **增量验证**：展示设计并获得批准后再继续
+- **保持灵活**：当某些内容不合理时，返回并澄清
