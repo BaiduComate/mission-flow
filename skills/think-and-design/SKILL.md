@@ -1,5 +1,5 @@
 ---
-name: brainstorming
+name: think-and-design
 description: 必须在任何创造性工作之前使用，比如创建功能、构建组件、添加能力或修改代码行为
 ---
 
@@ -99,7 +99,7 @@ flowchart TD
     H -->|批准| I((调用 writing-plans skill))
 ```
 
-**终止状态是调用 writing-plans。** 不要调用 `frontend-design`、`mcp-builder` 或任何其他实现类 skill。`brainstorming` 后唯一调用的 skill 是 `writing-plans`。
+**终止状态是调用 writing-plans。** 不要调用 `frontend-design`、`mcp-builder` 或任何其他实现类 skill。`think-and-design` 后唯一调用的 skill 是 `writing-plans`。
 
 ## 设计要点
 
