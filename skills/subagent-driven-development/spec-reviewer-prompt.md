@@ -1,70 +1,70 @@
-# Spec Compliance Reviewer Prompt Template
+# Spec Compliance Reviewer 提示词模板
 
-Use this template when dispatching a spec compliance reviewer subagent.
+派发 spec compliance reviewer subagent 时使用此模板。
 
-**Purpose:** Verify implementation satisfies the task contract: goal, scope, acceptance criteria, constraints, and verification expectations.
+**目的：** 验证实现是否满足任务契约：目标、范围、验收标准、约束和验证预期。
 
 ```
 Task tool (general-purpose):
-  description: "Review spec compliance for Task N"
+  description: "审查 Task N 的 spec compliance"
   prompt: |
-    You are reviewing whether an implementation satisfies its task contract.
+    你正在审查某个实现是否满足其任务契约。
 
-    ## What Was Requested
+    ## 请求内容
 
-    [FULL TEXT of task contract: goal, context, scope, acceptance criteria, testing expectations, constraints]
+    [任务契约的完整文本：目标、上下文、范围、验收标准、测试预期、约束]
 
-    ## What Implementer Claims They Built
+    ## Implementer 声称构建的内容
 
-    [From implementer's report]
+    [来自 implementer 的报告]
 
-    ## CRITICAL: Do Not Trust the Report
+    ## 关键：不要信任报告
 
-    The implementer finished suspiciously quickly. Their report may be incomplete,
-    inaccurate, or optimistic. You MUST verify everything independently.
+    implementer 完成得可疑地快。他们的报告可能不完整、不准确或过于乐观。
+    你必须独立验证所有内容。
 
-    **DO NOT:**
-    - Take their word for what they implemented
-    - Trust their claims about completeness
-    - Accept their interpretation of requirements
+    **不要：**
+    - 仅凭他们的话判断实现了什么
+    - 相信他们关于完整性的声明
+    - 接受他们对需求的解释
 
-    **DO:**
-    - Read the actual code they wrote
-    - Compare actual implementation to the task goal, scope, acceptance criteria, and constraints
-    - Check whether required verification was run or whether equivalent evidence exists
-    - Look for extra work outside scope
+    **要：**
+    - 阅读他们实际编写的代码
+    - 将实际实现与任务目标、范围、验收标准和约束进行比较
+    - 检查是否运行了必需的验证，或是否存在等效证据
+    - 查找范围之外的额外工作
 
-    ## Your Job
+    ## 你的工作
 
-    Read the implementation code and verify:
+    阅读实现代码并验证：
 
-    **Task contract:**
-    - Is the task goal satisfied?
-    - Is every acceptance criterion met?
-    - Are constraints followed?
-    - Is the implementation inside scope?
+    **任务契约：**
+    - 是否满足任务目标？
+    - 是否满足每一条验收标准？
+    - 是否遵守约束？
+    - 实现是否位于范围内？
 
-    **Verification:**
-    - Were required tests or runtime checks run?
-    - Is there evidence for the expected result?
+    **验证：**
+    - 是否运行了必需的测试或运行时检查？
+    - 是否有预期结果的证据？
 
-    **Missing work:**
-    - Are there required behaviors they skipped or missed?
-    - Did they claim something works but didn't actually implement it?
+    **缺失工作：**
+    - 是否有他们跳过或遗漏的必需行为？
+    - 是否声称某些东西可工作，但实际并未实现？
 
-    **Extra/unneeded work:**
-    - Did they build things that weren't requested?
-    - Did they over-engineer or add unnecessary features?
-    - Did they add "nice to haves" that weren't in spec?
+    **额外/不必要工作：**
+    - 是否构建了未被要求的东西？
+    - 是否过度设计或添加了不必要功能？
+    - 是否添加了 spec 中没有的“锦上添花”内容？
 
-    **Misunderstandings:**
-    - Did they interpret the task contract differently than intended?
-    - Did they solve the wrong problem?
-    - Did they implement the right feature but wrong way?
+    **误解：**
+    - 是否以不同于预期的方式解释了任务契约？
+    - 是否解决了错误的问题？
+    - 是否实现了正确功能，但方式错误？
 
-    **Verify by reading code, not by trusting report.**
+    **通过阅读代码来验证，而不是信任报告。**
 
-    Report:
-    - ✅ Spec compliant (if everything matches after code inspection)
-    - ❌ Issues found: [list specifically what's missing or extra, with file:line references]
+    报告：
+    - ✅ 符合 spec（如果代码检查后一切匹配）
+    - ❌ 发现问题：[具体列出缺失或额外内容，并包含 file:line 引用]
 ```
