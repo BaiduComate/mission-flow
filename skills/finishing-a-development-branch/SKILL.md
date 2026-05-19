@@ -1,203 +1,142 @@
 ---
 name: finishing-a-development-branch
-description: Use when a task is completed in the worktree dir
+description: 当 worktree 目录中的任务已完成时使用
 metadata:
   version: "0.1.0"
 ---
 
-# Finishing a Development Branch
+# 结束开发分支
 
-## Overview
+## 概览
 
-Guide completion of development work by presenting clear options and handling chosen workflow.
+通过呈现清晰选项并处理所选工作流，引导结束开发工作。
 
-**Core principle:** Verify tests → Present options → Execute choice → Clean up.
+**开始时声明：** "我正在使用 finishing-a-development-branch skill 来结束该任务"
 
-**Announce at start:** "我正在使用 finishing-a-development-branch skill 来结束该任务"
+## 流程
 
-## The Process
+### 1. 确定基础分支
 
-### Step 1: Verify Tests
-
-**Before presenting options, verify tests pass.** Do not hardcode a test command from a single manifest file — delegate to a sub-agent, same path as `using-git-worktrees` step 4:
-
-1. Look at what CI runs on PRs — that is the de facto test command
-2. Otherwise check task runners (Makefile / justfile / `scripts` / task aliases)
-3. Only fall back to language-default frameworks as a last resort
-4. Run it once; report pass/fail counts and a failure summary
-
-**If tests fail:**
-
-```
-Tests failing (<N> failures). Must fix before completing:
-
-[Show failures]
-
-Cannot proceed with merge until tests pass.
-```
-
-Stop. Don't proceed to Step 2.
-
-**If no test command exists:** Report "no baseline available" and ask the user whether to proceed without verification. Never fabricate a test run.
-
-**If tests pass:** Continue to Step 2.
-
-### Step 2: Determine Base Branch
-
-The branch created by `using-git-worktrees` has its upstream bound to the base branch. Prefer that over guessing `main` / `master`:
+由 `using-git-worktrees` 创建的分支，其 upstream 已绑定到基础分支。优先使用它，而不是猜测 `main` / `master`：
 
 ```bash
 base_branch=$(git rev-parse --abbrev-ref '@{upstream}' 2>/dev/null)
 ```
 
-If `@{upstream}` is unset (branch not created by `using-git-worktrees`), fall back to detection:
+如果未设置 `@{upstream}`（分支不是由 `using-git-worktrees` 创建的），则回退到检测：
 
 ```bash
 git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 ```
 
-Or ask the user to confirm.
+或请用户确认。
 
-### Step 3: Present Options
+### 2. 呈现选项
 
-**Using questions tools** to present exactly these 3 options:
+**使用 questions tools** 精确呈现以下 3 个选项：
 
 ```
-Implementation complete. What would you like to do?
+实现已完成。你想怎么处理？
 
-1. Merge back to <base-branch> locally
-2. Keep the branch as-is (I'll handle it later)
-3. Discard this work
+1. 在本地合并回 <base-branch>
+2. 保持该分支原样（我稍后处理）
+3. 丢弃本次工作
 
-Which option?
+选择哪个选项？
 ```
 
-**Don't add explanation** - keep options concise.
+### 3. 执行选择
 
-### Step 4: Execute Choice
-
-#### Option 1: Merge Locally
+#### Option 1: 本地合并
 
 ```bash
-# Switch to base branch
-git checkout <base-branch>
-
-# Pull latest
+git checkout <base-branch> # 切换到分叉出去前的分支
 git pull
-
-# Merge feature branch
 git merge <feature-branch>
-
-# Verify tests on merged result (same discovery path as Step 1)
-
-# If tests pass
 git branch -d <feature-branch>
 ```
 
-Then: Cleanup worktree (Step 5)
+然后：清理 worktree（Step 4）
 
-#### Option 2: Keep As-Is
+#### Option 2: 保持原样
 
-Report: "Keeping branch <name>. Worktree preserved at <path>."
+报告："保留分支 `<name>`。Worktree 保留在 `<path>`。"
 
-**Don't cleanup worktree.**
+**不要清理 worktree。**
 
-#### Option 3: Discard
+#### Option 3: 丢弃
 
-**Confirm first:**
+**先确认：**
 
 ```
-This will permanently delete:
-- Branch <name>
-- All commits: <commit-list>
-- Worktree at <path>
+这将永久删除：
+- 分支 <name>
+- 所有提交：<commit-list>
+- 位于 <path> 的 worktree
 
-Type 'discard' to confirm.
+输入 'discard' 以确认。
 ```
 
-Wait for exact confirmation.
-
-If confirmed:
+等待用户精确确认。如果已确认则执行：
 
 ```bash
 git checkout <base-branch>
 git branch -D <feature-branch>
 ```
 
-Then: Cleanup worktree (Step 5)
+然后：清理 worktree（Step 4）
 
-### Step 5: Cleanup Worktree
+### Step 4: 清理 Worktree
 
-**For Options 1, 3:**
+**对于 Option 1、3：**
 
-Worktrees created by `using-git-worktrees` live at `~/.comate/worktree/<repo>/<name>`. Check if the current branch is running inside one:
+由 `using-git-worktrees` 创建的 worktree 位于 `~/.comate/worktree/<repo>/<name>`。检查当前分支是否运行在其中：
 
 ```bash
 git worktree list | grep "$(git rev-parse --show-toplevel)"
 ```
 
-If yes, remove it from **outside** the worktree (you cannot remove the worktree you are standing in):
+如果是，请从 worktree **外部** 移除它（不能移除当前所在的 worktree）：
 
 ```bash
-cd "$(git rev-parse --git-common-dir)/.."   # jump to main repo
+cd "$(git rev-parse --git-common-dir)/.."   # 跳转到主仓库
 git worktree remove ~/.comate/worktree/<repo>/<name>
 ```
 
-**For Option 2:** Keep worktree.
+**对于 Option 2：** 保留 worktree。
 
-## Quick Reference
+## 常见错误
 
-| Option           | Merge | Keep Worktree | Cleanup Branch |
-| ---------------- | ----- | ------------- | -------------- |
-| 1. Merge locally | ✓     | -             | ✓              |
-| 2. Keep as-is    | -     | ✓             | -              |
-| 3. Discard       | -     | -             | ✓ (force)      |
+**开放式问题**
 
-## Common Mistakes
+- **问题：** "接下来我该做什么？" → 含糊不清
+- **修复：** 精确呈现 3 个结构化选项
 
-**Skipping test verification**
+**自动清理 worktree**
 
-- **Problem:** Merge broken code
-- **Fix:** Always verify tests before offering options
+- **问题：** 在 worktree 可能仍然需要时将其移除（Option 2）
+- **修复：** 仅对 Option 2 保留 worktree；对 1、3 移除
 
-**Open-ended questions**
+**丢弃时未确认**
 
-- **Problem:** "What should I do next?" → ambiguous
-- **Fix:** Present exactly 3 structured options
+- **问题：** 意外删除工作
+- **修复：** 要求输入 "discard" 确认
 
-**Automatic worktree cleanup**
+## 危险信号
 
-- **Problem:** Remove worktree when it might still be needed (Option 2)
-- **Fix:** Only keep the worktree for Option 2; remove for 1, 3
+**绝不：**
 
-**Hardcoding test commands**
+- 未经确认就删除工作
 
-- **Problem:** `npm test` / `pytest` / `cargo test` may not match the project's canonical command; produces false verification
-- **Fix:** Delegate test discovery to a sub-agent; follow CI → task runner → language default
+**始终：**
 
-**No confirmation for discard**
+- 在回退到检测前，优先使用 `@{upstream}` 作为基础分支
+- 精确呈现 3 个选项
+- 获取 Option 3 的输入确认
+- 仅对 Option 2 保留 worktree
 
-- **Problem:** Accidentally delete work
-- **Fix:** Require typed "discard" confirmation
+## 集成
 
-## Red Flags
+**配合使用：**
 
-**Never:**
-
-- Proceed with failing tests
-- Merge without verifying tests on result
-- Delete work without confirmation
-
-**Always:**
-
-- Verify tests before offering options (via sub-agent, never hardcoded commands)
-- Prefer `@{upstream}` for base branch before falling back to detection
-- Present exactly 3 options
-- Get typed confirmation for Option 3
-- Keep the worktree only for Option 2
-
-## Integration
-
-**Pairs with:**
-
-- **using-git-worktrees** - Cleans up worktree created by that skill
+- **using-git-worktrees** - 清理由该 skill 创建的 worktree

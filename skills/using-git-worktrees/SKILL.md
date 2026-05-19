@@ -1,156 +1,115 @@
 ---
 name: using-git-worktrees
-description: Use when starting feature work that needs isolation from current workspace or before executing implementation plans
+description: 在开始需要与当前工作区隔离的功能开发，或执行实现计划前使用
 metadata:
   version: "0.1.0"
 ---
 
-# Using Git Worktrees
+## 概览
 
-## Overview
+Git worktrees 会创建共享同一仓库的隔离工作空间，允许在不切换分支的情况下同时处理多个分支。
 
-Git worktrees create isolated workspaces sharing the same repository, allowing work on multiple branches simultaneously without switching.
+**开始时声明：** "我正在使用 using-git-worktrees skill 来设置独立工作空间"
 
-**Core principle:** Fixed base directory + task-derived naming + safety verification = reliable isolation.
+## 路径规则
 
-**Announce at start:** "我正在使用 using-git-worktrees skill 来设置独立工作空间"
+所有 worktree 都位于一个固定的基础目录下，并按仓库名称区分：`~/.comate/worktree/<repo-name>/<verb>-<obj>`
 
-## Path Rule
+- `<repo-name>`：仓库顶层目录的 basename（`basename "$(git rev-parse --show-toplevel)"`）。
+- `<verb>-<obj>`：从任务派生出的简短 kebab-case 名称（例如 `fix-login`、`add-oauth`、`refactor-router`）。
+  - `<verb>`：祈使动词，例如 `fix`、`add`、`refactor`、`remove`、`update`。
+  - `<obj>`：描述变更对象的单个目标名词或短语。
+- 分支名与目录名完全相同。
 
-All worktrees live under a single, fixed base directory keyed by repository name: `~/.comate/worktree/<repo-name>/<verb>-<obj>`
+如果 `git worktree add -b` 因目录或分支已存在而失败，则在 `<verb>-<obj>` 后追加 `-2`、`-3`、...，直到成功。
 
-- `<repo-name>`: basename of the repository toplevel (`basename "$(git rev-parse --show-toplevel)"`).
-- `<verb>-<obj>`: short, kebab-case name derived from the task (e.g. `fix-login`, `add-oauth`, `refactor-router`).
-  - `<verb>`: imperative verb such as `fix`, `add`, `refactor`, `remove`, `update`.
-  - `<obj>`: single target noun/phrase describing what is being changed.
-- The branch name is identical to the directory name.
+## 创建步骤
 
-If `git worktree add -b` fails because the directory or branch already exists, append `-2`, `-3`, ... to `<verb>-<obj>` until it succeeds.
-
-## Creation Steps
-
-### 1. Resolve names
+### 1. 解析名称
 
 ```bash
 repo=$(basename "$(git rev-parse --show-toplevel)")
 base_branch=$(git rev-parse --abbrev-ref HEAD)
-# name = <verb>-<obj> derived from the task
+# name = 从任务派生出的 <verb>-<obj>
 path=~/.comate/worktree/$repo/$name
 ```
 
-### 2. Create the worktree from the current branch
+### 2. 从当前分支创建 worktree
 
 ```bash
 mkdir -p ~/.comate/worktree/$repo
 git worktree add -b "$name" "$path" "$base_branch"
 cd "$path"
-git branch --set-upstream-to="$base_branch" "$name" # This records the merge-back target in git's own metadata (`branch.<name>.merge` in `.git/config`)
+git branch --set-upstream-to="$base_branch" "$name" # 这会在 git 自身元数据中记录合回目标（`.git/config` 中的 `branch.<name>.merge`）
 ```
 
-### 3. Run project setup
+### 3. 运行项目初始化
 
-Delegate to a sub-agent. Do **not** guess commands from a single manifest file. Path to give the sub-agent:
+委托给 sub-agent。不要根据单个 manifest 文件猜测命令。提供给 sub-agent 的路径：
 
-1. Identify the project's language composition first
-2. For each language, locate its toolchain signals: CI config, README/CONTRIBUTING, lockfile, manifest, from high authority to low.
-3. Run setup with the package manager the project actually uses; prefer the frozen/locked variant so the worktree matches the committed lockfile.
-4. On ambiguity (multiple lockfiles, missing version, unknown build system), stop and report — do not pick one by guessing.
+1. 先识别项目的语言组成
+2. 对每种语言，按权威性从高到低定位其工具链：CI 配置、README/CONTRIBUTING、lockfile、manifest。
+3. 使用项目实际采用的包管理器运行初始化；优先使用 frozen/locked 变体，确保 worktree 与已提交的 lockfile 一致。
+4. 遇到歧义（多个 lockfile、缺少版本、未知构建系统）时，停止并报告，不要猜测选择。
 
-### 4. Verify clean baseline
-
-Also delegate to a sub-agent. Path to give the sub-agent:
-
-1. Look at what CI runs on PRs — that is the de facto test command.
-2. Otherwise check task runners (Makefile / justfile / `scripts` / task aliases).
-3. Only fall back to language-default frameworks as a last resort.
-4. Run it once; report pass/fail counts and a failure summary.
-
-Handling the result:
-
-| Result                | Action                                                                                         |
-| --------------------- | ---------------------------------------------------------------------------------------------- |
-| All pass              | Continue to step 5                                                                             |
-| Any failure           | Report verbatim and ask: investigate pre-existing failures, or proceed? Never proceed silently |
-| No test command found | Report "no baseline available" and skip; do not fabricate a test run                           |
-
-### 5. Report location
+### 4. 报告位置
 
 ```
-Worktree ready at <full-path>
-Branch: <name> (upstream: <base_branch>)
-Tests passing (<N> tests, 0 failures)
-Ready to implement <task>
+Worktree 已准备好：<full-path>
+分支：<name>（upstream：<base_branch>）
+准备实现 <task>
 ```
 
-## Quick Reference
+## 常见错误
 
-| Situation                    | Action                                                         |
-| ---------------------------- | -------------------------------------------------------------- |
-| Recovering base branch       | `git rev-parse --abbrev-ref '@{upstream}'` inside the worktree |
-| Tests fail during baseline   | Report failures + ask                                          |
-| Setup / test command unclear | Delegate to sub-agent; never guess from a single file          |
-| No test runner discoverable  | Report "no baseline available" and continue, do not fabricate  |
+### 偏离 `<verb>-<obj>` 约定
 
-## Common Mistakes
+- **问题：** 不一致的名称会让列表查看和清理更困难；查找工具期望这种形状。
+- **修复：** 始终选择单个祈使动词 + 对象；仅使用 kebab-case。
 
-### Drifting from the `<verb>-<obj>` convention
+### 忘记设置 upstream
 
-- **Problem:** Inconsistent names make listing and cleanup harder; lookup tools expect this shape.
-- **Fix:** Always pick a single imperative verb + object; kebab-case only.
+- **问题：** 没有 upstream 时，`git status` / `git rebase` 不知道要与哪里比较；一旦继续后续工作，基础分支就会丢失。
+- **修复：** 始终在 `git worktree add` 之后立即运行 `git branch --set-upstream-to="$base_branch" "$name"`。
 
-### Forgetting to set upstream
+### 根据单个文件硬编码初始化命令
 
-- **Problem:** Without upstream, `git status` / `git rebase` have no idea where to compare against, and the base branch is lost once you move on.
-- **Fix:** Always run `git branch --set-upstream-to="$base_branch" "$name"` right after `git worktree add`.
+- **问题：** 存在 `package.json` → 运行 `npm install` 可能覆盖 `pnpm-lock.yaml`；存在 `pyproject.toml` → 运行 `pip install .` 会忽略已提交的 `uv.lock`。worktree 最终会使用真实项目从未使用的工具链。
+- **修复：** 将发现过程委托给 sub-agent。优先 CI / 文档，其次 lockfile，再其次 manifest。遇到歧义时停止并询问。
 
-### Proceeding with failing tests
-
-- **Problem:** Can't distinguish new bugs from pre-existing issues
-- **Fix:** Report failures, get explicit permission to proceed
-
-### Hardcoding setup / test commands from a single file
-
-- **Problem:** `package.json` exists → running `npm install` may overwrite a `pnpm-lock.yaml`; `pyproject.toml` exists → running `pip install .` ignores a committed `uv.lock`. The worktree ends up with a toolchain the real project never uses, and the "clean baseline" lies.
-- **Fix:** Delegate discovery to a sub-agent. Prioritize CI / docs, then lockfiles, then manifests. Stop and ask when ambiguous.
-
-## Example Workflow
+## 示例工作流
 
 ```
-Task: "fix login bug", repo comate-plugin-host, current branch feature/agent-mode.
+任务："fix login bug"，仓库 comate-plugin-host，当前分支 feature/agent-mode。
 
-[Resolve names: repo=comate-plugin-host, base_branch=feature/agent-mode, name=fix-login]
+[解析名称：repo=comate-plugin-host，base_branch=feature/agent-mode，name=fix-login]
 [mkdir -p ~/.comate/worktree/comate-plugin-host]
 [git worktree add -b fix-login ~/.comate/worktree/comate-plugin-host/fix-login feature/agent-mode]
 [cd ~/.comate/worktree/comate-plugin-host/fix-login]
 [git branch --set-upstream-to=feature/agent-mode fix-login]
 [npm install]
-[npm test - 47 passing]
 
-Worktree ready at ~/.comate/worktree/comate-plugin-host/fix-login
-Branch: fix-login (upstream: feature/agent-mode)
-Tests passing (47 tests, 0 failures)
-Ready to implement fix-login
+Worktree 已准备好：~/.comate/worktree/comate-plugin-host/fix-login
+分支：fix-login（upstream：feature/agent-mode）
+准备实现 fix-login
 ```
 
-## Red Flags
+## 警示项
 
-**Never:**
+**绝不要：**
 
-- Place worktrees anywhere other than `~/.comate/worktree/<repo>/`
-- Skip `git branch --set-upstream-to` - losing the base branch makes merge-back ambiguous
-- Skip baseline test verification
-- Proceed with failing tests without asking
+- 将 worktree 放在 `~/.comate/worktree/<repo>/` 之外的任何位置
+- 跳过 `git branch --set-upstream-to`：丢失基础分支会让合回目标变得不明确
 
-**Always:**
+**始终：**
 
-- Derive `<verb>-<obj>` from the task; branch name == directory name
-- Base the new branch on the current branch (`git rev-parse --abbrev-ref HEAD`)
-- Bind the base branch as upstream so merge-back is recoverable via `@{upstream}`
-- Auto-detect and run project setup **via a sub-agent**, respecting lockfile and CI signals
-- Verify clean test baseline **via a sub-agent** using the project's canonical test command
+- 从任务派生 `<verb>-<obj>`；分支名 == 目录名
+- 基于当前分支创建新分支（`git rev-parse --abbrev-ref HEAD`）
+- 将基础分支绑定为 upstream，以便可通过 `@{upstream}` 恢复合回目标
+- **通过 sub-agent** 自动检测并运行项目初始化，尊重 lockfile 和项目已有的 CI
 
-## Integration
+## 集成
 
-**Pairs with:**
+**配合使用：**
 
-- **finishing-a-development-branch** - REQUIRED for cleanup after work complete
+- **finishing-a-development-branch**：工作完成后清理时必需
