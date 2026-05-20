@@ -1,4 +1,49 @@
 #!/bin/bash
-cat <<'EOF'
-{"additionalContext": "You have the mission-flow skill set available. Use the Skill tool to invoke them:\n\n- `ai-prd-split`: ALWAYS trigger first for ANY coding-related request (bug fixes, features, refactoring). It decides internally whether to split tasks or proceed directly.\n- `architecture-design`: Trigger when user asks for a technical design/implementation plan, or when an iCafe card title starts with 【SDD】.\n- `using-git-worktrees`: Trigger when starting feature work that needs isolation, or before executing an implementation plan.\n- `finishing-a-development-branch`: Trigger when a task is completed in a worktree dir.\n- `deepwiki`: Trigger when user needs info from a repository's DeepWiki (architecture docs, browsing wiki, semantic search)."}
-EOF
+set -euo pipefail
+
+script_path="${BASH_SOURCE[0]}"
+case "$script_path" in
+  */*) script_dir="${script_path%/*}" ;;
+  *) script_dir="." ;;
+esac
+script_dir="$(cd -- "$script_dir" && pwd)"
+skill_path="${script_dir}/../skills/using-mission-flow/SKILL.md"
+
+json_escape() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  value="${value//$'\t'/\\t}"
+  value="${value//$'\r'/\\r}"
+  value="${value//$'\f'/\\f}"
+  value="${value//$'\b'/\\b}"
+  printf '%s' "$value"
+}
+
+printf '{"additionalContext":"'
+printf '%s' '<EXTREMELY_IMPORTANT>\n'
+printf '%s' 'You have mission-flow skills.\n\n'
+printf '%s' 'IMPORTANT: The using-mission-flow skill content is included below. It is ALREADY LOADED - you are currently following it. Do NOT use the skill tool to load \"using-mission-flow\" again - that would be redundant.\n\n'
+
+line_number=0
+in_frontmatter=0
+while IFS= read -r line || [ -n "$line" ]; do
+  line_number=$((line_number + 1))
+
+  if [ "$line_number" -eq 1 ] && [ "$line" = '---' ]; then
+    in_frontmatter=1
+    continue
+  fi
+
+  if [ "$in_frontmatter" -eq 1 ]; then
+    if [ "$line" = '---' ]; then
+      in_frontmatter=0
+    fi
+    continue
+  fi
+
+  json_escape "$line"
+  printf '%s' '\n'
+done < "$skill_path"
+
+printf '%s' '</EXTREMELY_IMPORTANT>"}'
