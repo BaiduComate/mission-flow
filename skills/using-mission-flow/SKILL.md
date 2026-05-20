@@ -10,9 +10,9 @@ description: 在任何对话开始时使用。建立如何查找和使用 skills
 
 Mission flow skills 覆盖默认 system prompt 行为，但**用户指令始终优先**：
 
-1. **用户的显式指令**（AGENTS.md、直接请求）是最高优先级
-2. **Mission flow skills** 在冲突时覆盖默认系统行为
-3. **默认 system prompt** 是最低优先级
+1. 用户的显式指令（AGENTS.md、直接请求）是**最高**优先级
+2. Mission flow skills 在冲突时覆盖默认系统行为
+3. 默认 system prompt 是**最低**优先级
 
 如果 AGENTS.md 说“不要使用 TDD”，而某个 skill 说“始终使用 TDD”，遵循用户指令。用户拥有控制权。
 
