@@ -10,6 +10,18 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "^skill$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.comate/plugins/mission-flow/hooks/pre-tool-use.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }
