@@ -8,6 +8,7 @@
 | 功能描述 | description | HTML 格式，Feature 和 Story 使用不同模板 |
 | 父卡片 | card_type | Feature |
 | 子卡片 | card_type | Story |
+| Story 下任务 | card_type | Task |
 | 负责人 | assignee_id | 默认使用触发操作的用户 |
 | 状态 | status | 默认"新建" |
 | 优先级 | priority | P0-Highest / P1-High / P2-Middle / P3-Low / P4-Lowest |
@@ -93,6 +94,8 @@
 - "背景"中的父需求链接 ← 第六步创建 Feature 后获得的 iCafe 链接
 
 ## 输出格式（创建完成后）
+
+父子关系必须为：Task → Story（parent）→ Feature（parent）→ projectCard（parent）。创建 Story 或 Task 时通过 `parent` 参数直接绑定父卡片，不要创建后再 update 绑定。
 
 ```
 卡片创建结果

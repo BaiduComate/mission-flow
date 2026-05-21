@@ -1,6 +1,6 @@
 ---
 name: plan-and-split
-description: 在接触代码之前，且已有 doc.md 文档时使用。基于 ai-prd-split 创建 iCafe Feature/Story，并将 Story 转写为 tasks.md 实施计划
+description: 在接触代码之前，且已有 doc.md 文档时使用。基于 split 创建 iCafe Feature/Story，并将 Story 转写为 tasks.md 实施计划
 ---
 
 **开始时声明：** "我正在使用 plan-and-split skill 创建 iCafe 卡片并编写实施计划。"
@@ -19,7 +19,7 @@ description: 在接触代码之前，且已有 doc.md 文档时使用。基于 a
 生成 `tasks.md` 前，必须完成 iCafe 拆卡并获得卡片编号。
 
 1. 基于已批准的 `doc.md` 理解整体需求。
-2. 读取 `../ai-prd-split/SKILL.md`，以其 Story 拆分规则为唯一拆分标准，并复用第六步到第八步：
+2. 读取 `../split/SKILL.md`，以其 Story 拆分规则为唯一拆分标准：
    - 读取用户偏好
    - 创建 Feature 卡片
    - 创建 Story 卡片
@@ -36,7 +36,7 @@ description: 在接触代码之前，且已有 doc.md 文档时使用。基于 a
 - 一个 Story 对应 `tasks.md` 中一个 Task。
 - 不得把一个 Story 拆成多个 Task。
 - 不得把多个 Story 合并成一个 Task。
-- 如果 Story 边界不合理，回到 `ai-prd-split` 拆卡流程调整。
+- 如果 Story 边界不合理，回到 `split` 拆卡流程调整。
 - 每个 Task 补充目标、上下文、范围、相关文件、验收标准、测试预期和约束。
 
 ## 文档结构
