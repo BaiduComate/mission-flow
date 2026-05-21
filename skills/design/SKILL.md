@@ -62,13 +62,16 @@ metadata:
 
 ### 请求用户 review 文档
 
-审查通过后，告知用户：
+审查通过后，必须使用 question 工具请求用户 review 文档：
 
 ```text
 设计文档已编写至 `.comate/specs/{feature_name}/doc.md`。请您审阅，如果需要调整，请告诉我。
 ```
 
-用户确认后，进入 `split`。
+问题必须包含两个选项：
+
+- 确认设计：进入 `split`
+- 修改设计：根据用户意见修改 `doc.md`，并重新自审
 
 ## 状态机
 
@@ -79,9 +82,9 @@ flowchart TD
     C --> D{审查通过?}
     D -->|否| B
     D -->|是| E[请求用户 review 文档]
-    E --> F{用户确认?}
-    F -->|要求修改| B
-    F -->|确认| G((调用 split skill))
+    E --> F{Question: 用户是否确认?}
+    F -->|修改设计| B
+    F -->|确认设计| G((调用 split skill))
 ```
 
 ## 文档风格
