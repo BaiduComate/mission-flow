@@ -2,7 +2,7 @@
 name: using-git-worktrees
 description: 在开始需要与当前工作区隔离的功能开发，或执行实现计划前使用
 metadata:
-  version: "0.1.0"
+  version: 0.2.0
 ---
 
 ## 概览

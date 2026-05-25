@@ -1,6 +1,8 @@
 ---
 name: think
 description: 必须在任何会产生代码变更的研发活动之前使用，用于澄清需求、调研必要上下文、展示当前理解，并询问用户是否进入 design
+metadata:
+  version: 0.2.0
 ---
 
 ## 目标

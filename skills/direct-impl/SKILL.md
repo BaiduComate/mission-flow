@@ -1,6 +1,8 @@
 ---
 name: direct-impl
 description: 在 split 完成且用户选择跳过 plan 后使用。主 Agent 基于已创建的 Story 和当前上下文直接实现，完成验证、自审、提交绑定 Story，并进入 finish-git-worktree
+metadata:
+  version: 0.2.0
 ---
 
 ## 目标

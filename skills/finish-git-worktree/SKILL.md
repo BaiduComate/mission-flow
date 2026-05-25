@@ -2,7 +2,7 @@
 name: finish-git-worktree
 description: 当实现已完成并需要处理由 git worktree 承载的开发分支时使用。用于呈现 rebase、保留、丢弃等结构化选项，并安全收尾 worktree 和开发分支
 metadata:
-  version: "0.1.0"
+  version: 0.2.0
 ---
 
 # 结束 Git Worktree
