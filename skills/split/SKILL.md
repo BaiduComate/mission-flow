@@ -11,7 +11,7 @@ metadata:
 
 ## 流程
 
-使用 TodoWrite 工具为下面列表项创建 TODO，并按顺序完成：
+按顺序完成下面流程。本 skill 主要创建和确认 iCafe 承载卡片，不使用 TodoWrite
 
 1. 拆分 Feature / Story
 2. 展示拆分结果并请求用户确认
