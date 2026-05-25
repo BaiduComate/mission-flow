@@ -1,6 +1,6 @@
 ---
-name: execute-task-plan
-description: 当存在 tasks.md 文件，且希望在当前对话实现该计划时使用
+name: subagent-impl
+description: 在 plan 完成并经用户 review 确认后使用。按 tasks.md 为每个 Task 派发 subagent 实现，完成后进入 finish
 ---
 
 ## 目标
@@ -75,7 +75,7 @@ Implementer subagent 会报告四种状态之一。请分别妥善处理：
 ## 示例工作流
 
 ```
-You: 我正在使用 execute-task-plan skill 执行此计划。
+You: 我正在使用 subagent-impl skill 执行此计划。
 
 [读取一次计划：.comate/specs/{feature_name}/tasks.md]
 [提取每个任务的目标、范围、上下文、文件、验收标准、约束和验证方式]
