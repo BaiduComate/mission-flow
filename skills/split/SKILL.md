@@ -13,26 +13,11 @@ metadata:
 
 使用 TodoWrite 工具为下面列表项创建 TODO，并按顺序完成：
 
-1. 准备拆分输入
-2. 拆分 Feature / Story
-3. 展示拆分结果并请求用户确认
-4. 读取 iCafe 偏好
-5. 创建 iCafe Feature / Story
-6. 可选创建 Story 下 Task 卡片
-
-### 准备拆分输入
-
-输入必须来自已完成的 `think`，或来自用户已 review 的 `design` 文档。
-
-拆分前必须确认可用上下文包含：
-
-- 需求概述和核心目标
-- 业务规则、边界条件和明确不做的内容
-- 相关模块、关键文件和现有能力判断
-- 用户已确认的方案选择
-- 若本次经过 `design`，必须包含`doc.md` 路径
-
-如果缺少会影响拆卡边界的信息，**必须**停止拆分并回到 `think` 澄清
+1. 拆分 Feature / Story
+2. 展示拆分结果并请求用户确认
+3. 读取 iCafe 偏好
+4. 创建 iCafe Feature / Story
+5. 可选创建 Story 下 Task 卡片
 
 ### 拆分 Feature / Story
 
@@ -92,7 +77,7 @@ metadata:
 
 读取用户偏好文件：`~/.comate/icafe/<repo-name>.json`，不要用 glob 搜索。
 
-如果偏好可用，复用空间、卡片类型、计划、父项目卡片和必填字段；如果偏好不存在或不匹配，调用 `icafe` 获取最近访问空间，并使用 question 工具让用户确认。
+如果偏好可用，复用空间、卡片类型、计划、父项目卡片和必填字段；如果偏好不存在或不匹配，调用 `icafe` skill 获取最近访问空间，并使用 question 工具让用户确认。
 
 用户确认空间和卡片类型后，立即保存或更新偏好文件。
 
@@ -138,8 +123,7 @@ metadata:
 
 ```mermaid
 flowchart TD
-    A[准备拆分输入] --> B[拆分 Feature / Story]
-    B --> C[展示拆分结果并请求用户确认]
+    B[拆分 Feature / Story] --> C[展示拆分结果并请求用户确认]
     C --> D{用户确认?}
     D -->|要求调整| B
     D -->|确认| E[读取 iCafe 偏好]
