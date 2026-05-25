@@ -46,7 +46,7 @@ flowchart TD
     MarkDone --> MoreTasks{还有剩余任务？}
     MoreTasks -->|是| Dispatch
     MoreTasks -->|否| FinalReview[为整个实现派发最终 code reviewer subagent]
-    FinalReview --> Finish[使用 finishing-a-development-branch]
+    FinalReview --> Finish[使用 finish]
 ```
 
 ## 处理 Implementer 状态
@@ -104,7 +104,7 @@ spec 批准后：
 
 [所有任务完成后]
 [为整个实现派发最终 code reviewer]
-[使用 finishing-a-development-branch]
+[使用 finish]
 ```
 
 ## 禁止事项

@@ -1,5 +1,5 @@
 ---
-name: finishing-a-development-branch
+name: finish
 description: 当 worktree 目录中的任务已完成时使用
 metadata:
   version: "0.1.0"
@@ -11,7 +11,7 @@ metadata:
 
 通过呈现清晰选项并处理所选工作流，引导结束开发工作。
 
-**开始时声明：** "我正在使用 finishing-a-development-branch skill 来结束该任务"
+**开始时声明：** "我正在使用 finish skill 来结束该任务"
 
 ## 流程
 
