@@ -19,7 +19,7 @@ metadata:
 
 1. 补充调研
 2. 编写 `doc.md`
-3. 自审设计文档
+3. 派发 reviewer 验证设计文档
 4. 请求用户 review 文档
 
 ### 补充调研
@@ -54,7 +54,7 @@ metadata:
 - 测试策略
 - 明确不做的内容
 
-### 自审设计文档
+### 验证设计文档
 
 写完 `doc.md` 后，使用 `references/design-document-reviewer-prompt.md` 派发 subagent 审查。
 
@@ -78,7 +78,7 @@ metadata:
 ```mermaid
 flowchart TD
     A[补充调研] --> B[编写 doc.md]
-    B --> C[自审设计文档]
+    B --> C[验证设计文档]
     C --> D{审查通过?}
     D -->|否| B
     D -->|是| E[请求用户 review 文档]
