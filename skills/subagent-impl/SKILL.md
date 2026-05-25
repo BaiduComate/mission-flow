@@ -1,6 +1,6 @@
 ---
 name: subagent-impl
-description: 在 plan 完成并经用户 review 确认后使用。按 tasks.md 为每个 Task 派发 subagent 实现，完成后进入 finish
+description: 在 plan 完成并经用户 review 确认后使用。按 tasks.md 为每个 Task 派发 subagent 实现，完成后进入 finish-git-worktree
 ---
 
 ## 目标
@@ -46,7 +46,7 @@ flowchart TD
     MarkDone --> MoreTasks{还有剩余任务？}
     MoreTasks -->|是| Dispatch
     MoreTasks -->|否| FinalReview[为整个实现派发最终 code reviewer subagent]
-    FinalReview --> Finish[使用 finish]
+    FinalReview --> Finish[使用 finish-git-worktree]
 ```
 
 ## 处理 Implementer 状态
@@ -104,7 +104,7 @@ spec 批准后：
 
 [所有任务完成后]
 [为整个实现派发最终 code reviewer]
-[使用 finish]
+[使用 finish-git-worktree]
 ```
 
 ## 禁止事项

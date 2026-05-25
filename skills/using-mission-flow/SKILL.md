@@ -43,7 +43,7 @@ flowchart TD
     QP -->|是| P[plan]
     QP -->|否| I[direct-impl]
     P --> E[subagent-impl]
-    E --> R[review / finish]
+    E --> R[review / finish-git-worktree]
     I --> R
 ```
 

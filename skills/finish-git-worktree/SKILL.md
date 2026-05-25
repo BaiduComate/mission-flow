@@ -1,17 +1,17 @@
 ---
-name: finish
-description: 当 worktree 目录中的任务已完成时使用
+name: finish-git-worktree
+description: 当实现已完成并需要处理由 git worktree 承载的开发分支时使用。用于呈现 rebase、保留、丢弃等结构化选项，并安全收尾 worktree 和开发分支
 metadata:
   version: "0.1.0"
 ---
 
-# 结束开发分支
+# 结束 Git Worktree
 
 ## 概览
 
-通过呈现清晰选项并处理所选工作流，引导结束开发工作。
+通过呈现清晰选项并处理所选工作流，引导结束由 git worktree 承载的开发工作。
 
-**开始时声明：** "我正在使用 finish skill 来结束该任务"
+**开始时声明：** "我正在使用 finish-git-worktree skill 来结束该任务"
 
 ## 流程
 
@@ -38,7 +38,7 @@ git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 ```
 实现已完成。你想怎么处理？
 
-1. 在本地合并回 <base-branch>
+1. 将 <feature-branch> rebase 到 <base-branch>，并清理 worktree 和本地分支
 2. 保持该分支原样（我稍后处理）
 3. 丢弃本次工作
 
@@ -47,16 +47,15 @@ git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 
 ### 3. 执行选择
 
-#### Option 1: 本地合并
+#### Option 1: 本地 rebase
 
 ```bash
-git checkout <base-branch> # 切换到分叉出去前的分支
-git pull
-git merge <feature-branch>
-git branch -d <feature-branch>
+git checkout <feature-branch>
+git fetch
+git rebase <base-branch>
 ```
 
-然后：清理 worktree（Step 4）
+然后：报告 `feature-branch` 已基于 `<base-branch>` 重放，并清理 worktree 与本地 feature 分支（Step 4）。
 
 #### Option 2: 保持原样
 
@@ -96,11 +95,12 @@ git branch -D <feature-branch>
 git worktree list | grep "$(git rev-parse --show-toplevel)"
 ```
 
-如果是，请从 worktree **外部** 移除它（不能移除当前所在的 worktree）：
+如果是，请从 worktree **外部** 移除它（不能移除当前所在的 worktree）。Option 1 在移除 worktree 后删除本地 feature 分支；Option 3 删除分支已经在上一步完成。
 
 ```bash
 cd "$(git rev-parse --git-common-dir)/.."   # 跳转到主仓库
 git worktree remove ~/.comate/worktree/<repo>/<name>
+git branch -D <feature-branch>               # 仅 Option 1 执行
 ```
 
 **对于 Option 2：** 保留 worktree。
