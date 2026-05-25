@@ -51,7 +51,7 @@ flowchart TD
     D --> S
     S --> QP{Question:<br/>是否进入 plan?}
     QP -->|是| P[plan]
-    QP -->|否| I[implement]
+    QP -->|否| I[direct-impl]
     P --> E[subagent-impl]
     E --> R[review / finish]
     I --> R
