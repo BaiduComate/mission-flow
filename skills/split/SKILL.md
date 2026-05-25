@@ -115,7 +115,7 @@ metadata:
 必须使用 question 工具询问用户是否进入 `plan`，问题必须包含两个选项：
 
 - 进入 `plan`：生成 `tasks.md` 后按计划执行
-- 跳过 `plan`：直接基于 Story 开始实现
+- 跳过 `plan`：调用 `direct-impl` 直接基于 Story 开始实现
 
 你需要在推荐的选项后面标上记号和理由。
 
@@ -133,5 +133,5 @@ flowchart TD
     T -->|否| G{Question: 是否进入 plan?}
     U --> G
     G -->|进入 plan| H((调用 plan skill))
-    G -->|跳过 plan| I((进入实现))
+    G -->|跳过 plan| I((调用 direct-impl skill))
 ```
