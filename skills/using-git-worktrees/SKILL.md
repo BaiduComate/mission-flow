@@ -112,4 +112,4 @@ Worktree 已准备好：~/.comate/worktree/comate-plugin-host/fix-login
 
 **配合使用：**
 
-- **finishing-a-development-branch**：工作完成后清理时必需
+- **finish**：工作完成后清理时必需
