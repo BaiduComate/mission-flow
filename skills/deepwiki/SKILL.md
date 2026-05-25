@@ -2,7 +2,7 @@
 name: deepwiki
 description: Use when the user needs information from a repository's DeepWiki or wiki-style documentation, such as understanding architecture, browsing documentation structure, reading a specific page, or semantically searching repo docs. Do not use for direct source-code inspection, code modification, runtime debugging, test execution, or general web search.
 metadata:
-  version: "0.1.0"
+  version: 0.2.0
 ---
 
 # DeepWiki

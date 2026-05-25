@@ -1,6 +1,8 @@
 ---
 name: requesting-code-review
 description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
+metadata:
+  version: 0.2.0
 ---
 
 # Requesting Code Review

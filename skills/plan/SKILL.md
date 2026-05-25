@@ -1,6 +1,8 @@
 ---
 name: plan
 description: 仅在 split 完成后，且用户通过 question 明确选择进入 plan 时使用。用于将已创建的 iCafe 卡片转写为 `tasks.md` 实施计划
+metadata:
+  version: 0.2.0
 ---
 
 ## 目标

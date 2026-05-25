@@ -1,6 +1,8 @@
 ---
 name: subagent-impl
 description: 在 plan 完成并经用户 review 确认后使用。按 tasks.md 为每个 Task 派发 subagent 实现，完成后进入 finish-git-worktree
+metadata:
+  version: 0.2.0
 ---
 
 ## 目标
