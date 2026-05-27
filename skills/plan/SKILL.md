@@ -43,15 +43,15 @@ metadata:
 
 > 面向 agentic workers：REQUIRED SUB-SKILL: 使用 subagent-impl 逐个任务实施此计划。步骤使用 checkbox (`- [ ]`) 语法进行跟踪。
 
-**目标（Goal）：** [用一句话描述这将构建什么]
+**目标：** [用一句话描述这将构建什么]
 
-**架构（Architecture）：** [用 2-3 句话描述方案；如果没有 doc.md，则基于 split 上下文简述]
+**架构：** [用 2-3 句话描述方案；如果没有 doc.md，则基于 split 上下文简述]
 
-**技术栈（Tech Stack）：** [关键技术/库]
+**技术栈：** [关键技术/库]
 
-**Feature 卡片（Feature Card）：** [Feature 卡片 ID]
+**Feature 卡片：** [Feature 卡片 ID]
 
-**提交绑定策略（Commit Binding）：** 仅绑定 Story 卡片，不绑定 Feature 或 Story 下 Task
+**提交绑定策略：** 仅绑定 Story 卡片，不绑定 Feature 或 Story 下 Task
 
 ## Story 任务列表
 
@@ -65,36 +65,36 @@ metadata:
 ```markdown
 ### Task N: [Story 标题]
 
-## 目标（Goal）
+## 目标
 [此任务必须产出的可观察结果]
 
-## 上下文（Context）
+## 上下文
 [此任务如何契合已批准的 doc.md 或 split 上下文]
 
 ## iCafe 绑定
 - Feature 卡片：[Feature 卡片 ID]
 - Story 卡片：[Story 卡片 ID]
 
-## 范围（Scope）
-- 范围内（In scope）：[此任务可以变更的内容]
-- 范围外（Out of scope）：[此任务不得执行的相邻工作]
+## 范围
+- 范围内：[此任务可以变更的内容]
+- 范围外：[此任务不得执行的相邻工作]
 
-## 相关文件（Relevant Files）
-- 可能修改（Likely modify）：`exact/path/to/existing.py`
-- 可能创建（Likely create）：`exact/path/to/new_file.py`
-- 参考（Reference）：`exact/path/to/reference.py`
+## 相关文件
+- 可能修改：`exact/path/to/existing.py`
+- 可能创建：`exact/path/to/new_file.py`
+- 参考：`exact/path/to/reference.py`
 
-## 验收标准（Acceptance Criteria）
+## 验收标准
 - [ ] [可观察行为或交付物]
 - [ ] [重要边界情况或失败行为]
 
-## 测试预期（Testing Expectations）
-- 单元测试（Unit tests）：[要覆盖的具体行为]
-- 集成/E2E 或运行时验证（Integration/E2E or runtime verification）：[如果可用]
-- 命令（Commands）：`exact command to run`
-- 预期结果（Expected result）：[应当通过或可观察到的内容]
+## 测试预期
+- 单元测试：[要覆盖的具体行为]
+- 集成/E2E 或运行时验证：[如果可用]
+- 命令：`exact command to run`
+- 预期结果：[应当通过或可观察到的内容]
 
-## 约束（Constraints）
+## 约束
 - [必需的 API、兼容性、依赖、风格或架构约束]
 ```
 
