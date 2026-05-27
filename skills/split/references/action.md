@@ -13,7 +13,7 @@
 | 状态 | status | 默认"新建" |
 | 优先级 | priority | P0-Highest / P1-High / P2-Middle / P3-Low / P4-Lowest |
 
-## Feature 描述模板（HTML）
+## Feature 描述模板
 
 创建 Feature 卡片时 `description` 字段需为 HTML 格式，将以下 Markdown 模板转换后传入：
 
@@ -54,7 +54,7 @@
 - "代码库现状" ← 第二步代码库调研报告（直接搬入）
 - "任务总览" ← 第四步拆分结果汇总
 
-## Story 描述模板（HTML）
+## Story 描述模板
 
 创建 Story 卡片时 `description` 字段需为 HTML 格式，将以下 Markdown 模板转换后传入：
 
@@ -93,7 +93,7 @@
 - "依赖" ← 第四步合并判断中识别出的依赖关系
 - "背景"中的父需求链接 ← 第六步创建 Feature 后获得的 iCafe 链接
 
-## 输出格式（创建完成后）
+## 输出格式
 
 父子关系必须为：Task → Story（parent）→ Feature（parent）→ projectCard（parent）。创建 Story 或 Task 时通过 `parent` 参数直接绑定父卡片，不要创建后再 update 绑定。
 

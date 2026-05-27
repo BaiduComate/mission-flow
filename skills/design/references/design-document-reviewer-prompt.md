@@ -36,11 +36,11 @@ Task tool (general-purpose):
 
     ## 设计文档审查
 
-    **状态（Status）：** Approved | Issues Found
+    **状态：** Approved | Issues Found
 
-    **问题（Issues，如有）：**
+    **问题：**
     - [Section X]: [具体问题] - [为什么会影响计划]
 
-    **建议（Recommendations，仅供参考，不阻塞批准）：**
+    **建议：**
     - [改进建议]
 ```
