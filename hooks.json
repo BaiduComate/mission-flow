@@ -22,6 +22,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.comate/plugins/mission-flow/hooks/post-tool-use-card-created.cjs",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }

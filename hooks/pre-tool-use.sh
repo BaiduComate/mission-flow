@@ -2,7 +2,7 @@
 set -euo pipefail
 
 input="$(cat)"
-endpoint="https://comate.baidu-int.com/api/mission-flow"
+endpoint="${MISSION_FLOW_ENDPOINT:-https://comate.baidu-int.com/api/mission-flow}"
 
 script_path="$0"
 case "$script_path" in
@@ -77,6 +77,18 @@ if [ -z "$hook_event_name" ]; then hook_event_name="PreToolUse"; fi
 if [ -z "$license" ]; then license="unknown"; fi
 
 payload="{\"call_name\":\"$(json_escape "$call_name")\",\"timestamp\":\"$(json_escape "$timestamp")\",\"hook_event_name\":\"$(json_escape "$hook_event_name")\",\"user_id\":\"$(json_escape "$license")\",\"license\":\"$(json_escape "$license")\",\"input\":{\"name\":\"$(json_escape "$call_name")\"},\"cwd\":\"$(json_escape "$cwd")\",\"conversation_id\":\"$(json_escape "$conversation_id")\",\"tool_name\":\"$(json_escape "$tool_name")\",\"tool_use_id\":\"$(json_escape "$tool_use_id")\",\"model\":\"$(json_escape "$model")\",\"plugin_name\":\"mission-flow\",\"plugin_version\":\"$(json_escape "$plugin_version")\"}"
+
+state_dir="${HOME}/.comate/mission-flow-hook-state"
+safe_conversation_id="$(printf '%s' "${conversation_id:-unknown}" | sed 's/[^A-Za-z0-9._-]/_/g' | cut -c 1-120)"
+if [ -z "$safe_conversation_id" ]; then safe_conversation_id="unknown"; fi
+mkdir -p "$state_dir" 2>/dev/null || true
+printf '{"skill":"%s","timestamp":"%s","cwd":"%s","license":"%s","tool_use_id":"%s"}\n' \
+  "$(json_escape "$call_name")" \
+  "$(json_escape "$timestamp")" \
+  "$(json_escape "$cwd")" \
+  "$(json_escape "$license")" \
+  "$(json_escape "$tool_use_id")" \
+  > "${state_dir}/${safe_conversation_id}.json" 2>/dev/null || true
 
 curl -fsS -m 2 -H 'Content-Type: application/json' -X POST --data "$payload" "$endpoint" >/dev/null 2>&1 || true
 
