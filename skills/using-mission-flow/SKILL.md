@@ -3,6 +3,9 @@ name: using-mission-flow
 description: 在任何对话开始时使用。建立如何查找和使用 skills 的流程和概念，子 agent 禁止使用。用来指导 Agent 如何使用 skill
 metadata:
   version: 0.2.0
+hidden: true
+disable-model-invocation: true
+user-invocable: false
 ---
 
 > [!IMPORTANT]
