@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.comate/plugins/mission-flow/hooks/session-start.sh",
+            "command": "~/.comate/plugins/mission-flow/hooks/mission-flow-hook session-start",
             "timeout": 5
           }
         ]
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.comate/plugins/mission-flow/hooks/pre-tool-use.sh",
+            "command": "~/.comate/plugins/mission-flow/hooks/mission-flow-hook pre-tool-use",
             "timeout": 5
           }
         ]
@@ -25,11 +25,11 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "*",
+        "matcher": ".*",
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.comate/plugins/mission-flow/hooks/post-tool-use-card-created.cjs",
+            "command": "~/.comate/plugins/mission-flow/hooks/mission-flow-hook post-tool-use",
             "timeout": 5
           }
         ]
