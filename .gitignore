@@ -1,3 +1,6 @@
 .DS_store
 __pycache__
 /.obsidian
+/bin/mission-flow-hook-*
+/bin/mission-flow-hook.MANIFEST
+/bin/*.tmp.*
