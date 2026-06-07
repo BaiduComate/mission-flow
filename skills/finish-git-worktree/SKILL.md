@@ -33,16 +33,17 @@ git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 
 ### 2. 呈现选项
 
-**使用 questions tools** 精确呈现以下 3 个选项：
+**使用 question 工具** 精确呈现以下 3 个结构化选项：
 
 ```
 实现已完成。你想怎么处理？
 
-1. 将 <feature-branch> rebase 到 <base-branch>，并清理 worktree 和本地分支
-2. 保持该分支原样（我稍后处理）
-3. 丢弃本次工作
-
-选择哪个选项？
+1. 本地 rebase（推荐）
+   description: 将 <feature-branch> rebase 到 <base-branch>，并清理 worktree 和本地分支。
+2. 保持原样
+   description: 保留当前分支和 worktree，用户稍后自行处理。
+3. 丢弃工作
+   description: 删除本次 worktree、分支和相关提交，执行前必须二次确认。
 ```
 
 ### 3. 执行选择
@@ -127,6 +128,7 @@ git branch -D <feature-branch>               # 仅 Option 1 执行
 **绝不：**
 
 - 未经确认就删除工作
+- 未经用户同意在 icode 上 push 或提交 cr，若用户同意提交 cr，必须提交到 `@{upstream}`
 
 **始终：**
 

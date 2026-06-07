@@ -112,6 +112,7 @@ spec 批准后：
 ## 禁止事项
 
 绝不要：
+- 没有阻塞性问题时，执行到一半就退出循环，必须完成所有任务后结束流程
 - 未经用户明确同意就在 main/master 分支上开始实现；使用 `using-git-worktrees` skill 创建隔离的 worktree
 - 对可能触碰相同文件的任务并行派发多个 implementation subagent
 - 让 subagent 自己读取整个 plan 文档；请提供精确的任务文本和相关上下文
