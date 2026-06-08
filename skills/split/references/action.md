@@ -97,32 +97,11 @@
 
 父子关系必须为：Task → Story（parent）→ Feature（parent）→ projectCard（parent）。创建 Story 或 Task 时通过 `parent` 参数直接绑定父卡片，不要创建后再 update 绑定。
 
+输出格式统一为 `[{space}-{sequence}](https://console.cloud.baidu-int.com/devops/icafe/issue/{space}-{sequence}/show)`。样例如下
+
 ```
-卡片创建结果
+iCafe 卡片已创建：
 
-- 需求名称：[名称]
-- 核心目标：[目标]
-- 需求文档：[URL，如有]
-
-Feature 卡片
-| 序号 | 标题 | 类型 | 负责人 | 链接 |
-|------|------|------|--------|------|
-| 1 | ... | Feature | xxx | [查看](...) |
-
-Story 卡片列表（共 N 个）
-
-#### 前端卡片
-| 序号 | 标题 | 负责人 | 链接 |
-|------|------|--------|------|
-| 1 | ... | xxx | [查看](...) |
-
-#### 服务端卡片
-| 序号 | 标题 | 负责人 | 链接 |
-|------|------|--------|------|
-| 1 | ... | xxx | [查看](...) |
-
-提示
-- 所有卡片已创建成功
-- 包含 1 个 Feature 父卡片和 N 个 Story 子卡片
-- 可通过链接访问卡片详情
+Feature: DevOps-iScan-38896：【MISSION】AppBuilder 模式
+Story: DevOps-iScan-38897：【MISSION】【全栈】【AppBuilder】新增 AppBuilder 模式完整实现
 ```
