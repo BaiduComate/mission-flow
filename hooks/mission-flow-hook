@@ -34,10 +34,7 @@ fi
 plugin_dir="$(dirname "${hooks_dir}")"
 bin_dir="${plugin_dir}/bin"
 bin_base_url="https://vercel-static.bj.bcebos.com/stash/v1/0b72aae/comate-plus-web/7a0aaaf/mission-flow/bin"
-
-plugin_version() {
-  sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${plugin_dir}/plugin.json" 2>/dev/null | sed -n '1p'
-}
+hook_binary_version="1.1.3"
 
 os="$(uname -s 2>/dev/null || true)"
 arch="$(uname -m 2>/dev/null || true)"
@@ -56,7 +53,7 @@ esac
 
 filename="mission-flow-hook-${goos}-${goarch}"
 target="${bin_dir}/${filename}"
-expected_version="$(plugin_version)"
+expected_version="${hook_binary_version}"
 version_file="${target}.version"
 download_url="${bin_base_url}/${expected_version}/${filename}"
 lock_dir="${target}.lock"
