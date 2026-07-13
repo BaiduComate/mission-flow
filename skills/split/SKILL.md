@@ -1,13 +1,15 @@
 ---
 name: split
-description: 必须在 think 或 design 完成后使用。用于拆分并创建 iCafe Feature / Story 卡片，完成后询问用户是否进入 plan
+description: 必须在需求澄清或方案设计完成后使用。用于拆分并创建 iCafe Feature / Story 卡片，完成后询问用户是否编写计划文档
 metadata:
-  version: 0.2.0
+  version: 0.2.1
 ---
 
 ## 目标
 
 将已澄清的需求拆分为 iCafe Feature / Story 卡片，作为百度内部研发活动和提交绑定的承载。
+
+**开始时声明：**“已进入卡片拆分阶段，我会整理 Feature 和 Story，确认后创建 iCafe 卡片。”不得向用户展示 `split` 这一内部 skill 名称。
 
 ## 流程
 
@@ -126,12 +128,12 @@ metadata:
 6. 如果用户选择创建，调用 `icafe` 在对应 Story 下创建 Task 卡片
 7. Task 创建时必须通过 `parent` 绑定对应 Story，不要创建后再 update 绑定
 
-#### 询问是否进入 `plan`
+#### 询问是否编写计划文档
 
-必须使用 question 工具询问用户是否进入 `plan`，问题必须包含两个选项：
+必须使用 question 工具询问用户是否编写计划文档。面向用户不得直接使用 `plan`、`direct-impl` 等内部 skill 名称。问题必须包含两个选项：
 
-- 进入 `plan`：生成 `tasks.md` 后按计划执行
-- 跳过 `plan`：调用 `direct-impl` 直接基于 Story 开始实现
+- 编写计划文档：生成 `tasks.md`，经用户确认后启动子 Agent 逐项实施。选择后内部调用 `plan`
+- 直接开始实施：跳过计划文档，直接基于已确认的 Story 开始开发。选择后内部调用 `direct-impl`
 
 ## 状态机
 
@@ -144,8 +146,8 @@ flowchart TD
     E --> F[创建 iCafe Feature / Story]
     F --> T{是否创建 Story 下 Task?}
     T -->|是| U[创建 Story 下 Task]
-    T -->|否| G{Question: 是否进入 plan?}
+    T -->|否| G{是否编写计划文档?}
     U --> G
-    G -->|进入 plan| H((调用 plan skill))
-    G -->|跳过 plan| I((调用 direct-impl skill))
+    G -->|编写计划文档| H((编写并确认 tasks.md))
+    G -->|直接开始实施| I((基于 Story 开始开发))
 ```

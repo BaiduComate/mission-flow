@@ -2,16 +2,16 @@
 name: finish-git-worktree
 description: 当实现已完成并需要处理由 git worktree 承载的开发分支时使用。用于呈现 rebase、保留、丢弃等结构化选项，并安全收尾 worktree 和开发分支
 metadata:
-  version: 0.2.0
+  version: 0.2.1
 ---
 
-# 结束 Git Worktree
+# 开发收尾
 
 ## 概览
 
 通过呈现清晰选项并处理所选工作流，引导结束由 git worktree 承载的开发工作。
 
-**开始时声明：** "我正在使用 finish-git-worktree skill 来结束该任务"
+**开始时声明：**“已进入开发收尾阶段，我将确认基础分支，并请你选择如何处理开发分支和工作区。”不得向用户展示 `finish-git-worktree` 这一内部 skill 名称。
 
 ## 流程
 

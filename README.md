@@ -65,15 +65,17 @@ Mission Flow 从会话开始就介入。
 
 ## 基础流程
 
-1. **using-mission-flow**：会话启动时注入技能使用规则，要求 Agent 在行动前检查相关 skills，并把研发活动导向 Mission Flow 主流程。
-2. **think**：任何会产生代码变更的研发活动前必须使用。它负责澄清需求、调研必要上下文、提出方案，并询问是否进入 `design`。
-3. **design**：用户选择后使用。它把方案写入 `.comate/specs/{feature_name}/doc.md`，补充 DeepWiki / 代码探索上下文，并通过 reviewer 自检。
-4. **split**：在 `think` 或 `design` 后使用。它拆分并创建 iCafe Feature / Story，明确 Story 作为提交绑定单位，并询问是否进入 `plan`。
-5. **plan**：用户选择后使用。它把已确认的 Story 转写成 `.comate/specs/{feature_name}/tasks.md`，供后续 subagent 执行。
-6. **subagent-impl**：在计划确认后使用。它按 Task 派发 implementer，并依次通过 spec compliance review 和 code quality review。
-7. **direct-impl**：在用户选择跳过 `plan` 时使用。它让主 Agent 直接基于 Story 实现，但仍要求验证、自审和 Story 绑定。
-8. **using-git-worktrees**：在需要隔离开发空间时使用。它把 worktree 放到 `~/.comate/worktree/<repo>/<verb>-<obj>`，并把基础分支记录为 upstream。
-9. **finish-git-worktree**：实现完成后使用。它提供 rebase 后清理、保留分支、丢弃工作三种收尾路径。
+用户在执行过程中看到的是中文阶段名称，括号中的英文名称仅用于插件内部调用和维护。
+
+1. **流程引导**（`using-mission-flow`）：会话启动时注入技能使用规则，要求 Agent 在行动前检查相关 skills，并把研发活动导向 Mission Flow 主流程。
+2. **需求澄清**（`think`）：任何会产生代码变更的研发活动前必须执行。它负责澄清需求、调研必要上下文、提出方案，并询问是否进行方案设计。
+3. **方案设计**（`design`）：用户选择后执行。它把方案写入 `.comate/specs/{feature_name}/doc.md`，补充 DeepWiki 和代码探索上下文，并通过 reviewer 自检。
+4. **卡片拆分**（`split`）：在需求澄清或方案设计后执行。它拆分并创建 iCafe Feature 和 Story，明确 Story 作为提交绑定单位，并询问是否编写计划文档。
+5. **编写计划文档**（`plan`）：用户选择后执行。它把已确认的 Story 转写成 `.comate/specs/{feature_name}/tasks.md`，供用户审阅和后续实施。
+6. **启动子 Agent 进行实施**（`subagent-impl`）：在计划文档确认后执行。它按 Task 派发 implementer，并依次通过 spec compliance review 和 code quality review。
+7. **直接实施**（`direct-impl`）：在用户选择跳过计划文档时执行。它让主 Agent 直接基于 Story 实现，但仍要求验证、自审和 Story 绑定。
+8. **准备独立工作区**（`using-git-worktrees`）：在需要隔离开发空间时执行。它把 worktree 放到 `~/.comate/worktree/<repo>/<verb>-<obj>`，并把基础分支记录为 upstream。
+9. **开发收尾**（`finish-git-worktree`）：实现完成后执行。它提供 rebase 后清理、保留分支、丢弃工作三种收尾路径。
 
 ## 理念
 

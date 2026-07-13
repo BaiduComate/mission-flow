@@ -1,22 +1,24 @@
 ---
 name: plan
-description: 仅在 split 完成后，且用户通过 question 明确选择进入 plan 时使用。用于将已创建的 iCafe 卡片转写为 `tasks.md` 实施计划
+description: 仅在卡片拆分完成后，且用户通过 question 明确选择编写计划文档时使用。用于将已创建的 iCafe 卡片转写为 `tasks.md` 计划文档
 metadata:
-  version: 0.2.0
+  version: 0.2.1
 ---
 
 ## 目标
 
-基于 `split` 已创建并经用户确认的 Feature / Story，生成可由 `subagent-impl` 执行的 `.comate/specs/{feature_name}/tasks.md`
+基于 `split` 已创建并经用户确认的 Feature / Story，生成可由 `subagent-impl` 执行的 `.comate/specs/{feature_name}/tasks.md` 计划文档
+
+**开始时声明：**“已进入编写计划文档阶段，我会把已确认的 Story 转写为可审阅、可执行的计划文档。”不得向用户展示 `plan` 这一内部 skill 名称。
 
 ## 流程
 
-按顺序完成下面流程。本 skill 生成供用户 review 的实施计划，不使用 TodoWrite
+按顺序完成下面流程。本 skill 生成供用户审阅的计划文档，不使用 TodoWrite
 
 1. 转写 Story 为 Task
 2. 编写 `tasks.md`
-3. 自审实施计划
-4. 请求用户 review 计划
+3. 自审计划文档
+4. 请求用户审阅文档
 
 ### 转写 Story 为 Task
 
@@ -36,12 +38,12 @@ metadata:
 .comate/specs/{feature_name}/tasks.md
 ```
 
-每个计划必须以这个头部开始：
+每份计划文档必须以这个头部开始：
 
 ```markdown
-# [Feature Name] 实施计划
+# [Feature Name] 计划文档
 
-> 面向 agentic workers：REQUIRED SUB-SKILL: 使用 subagent-impl 逐个任务实施此计划。步骤使用 checkbox (`- [ ]`) 语法进行跟踪。
+> 面向 agentic workers：REQUIRED SUB-SKILL: 使用 subagent-impl 逐个任务实施此文档。步骤使用 checkbox (`- [ ]`) 语法进行跟踪。
 
 **目标：** [用一句话描述这将构建什么]
 
@@ -98,11 +100,11 @@ metadata:
 - [必需的 API、兼容性、依赖、风格或架构约束]
 ```
 
-### 自审实施计划
+### 自审计划文档
 
 `tasks.md` 不得包含占位符或空泛要求。
 
-以下情况属于计划失败：
+以下情况属于计划文档自审失败：
 
 - `TBD`、`TODO`、`implement later`、`fill in details`
 - “Add appropriate error handling” 但没有说明哪些错误重要
@@ -110,29 +112,29 @@ metadata:
 - “Similar to Task N” 但没有重复必要上下文
 - 引用了任何任务中都未定义的类型、函数或方法
 
-### 请求用户 review 计划
+### 请求用户审阅文档
 
-自审通过后，必须使用 question 工具请求用户 review 计划：
+自审通过后，必须使用 question 工具请求用户审阅文档：
 
 ```text
-计划已完成并保存到 `.comate/specs/{feature_name}/tasks.md`。请您 review，如果需要调整，请告诉我。
+计划文档已完成并保存到 `.comate/specs/{feature_name}/tasks.md`。请您审阅，如果需要调整，请告诉我。
 ```
 
 问题必须包含两个选项：
 
-- 确认计划：调用 `subagent-impl`
-- 修改计划：根据用户意见修改 `tasks.md`，并重新自审
+- 确认文档：启动子 Agent 进行实施，内部调用 `subagent-impl`
+- 修改文档：根据用户意见修改 `tasks.md`，并重新自审
 
 ## 状态机
 
 ```mermaid
 flowchart TD
     A[转写 Story 为 Task] --> C[编写 tasks.md]
-    C --> D[自审实施计划]
+    C --> D[自审计划文档]
     D --> E{自审通过?}
     E -->|否| C
-    E -->|是| F[请求用户 review 计划]
-    F --> G{Question: 用户是否确认?}
-    G -->|修改计划| C
-    G -->|确认计划| H((调用 subagent-impl skill))
+    E -->|是| F[请求用户审阅文档]
+    F --> G{用户是否确认计划文档?}
+    G -->|修改文档| C
+    G -->|确认文档| H((启动子 Agent 进行实施))
 ```

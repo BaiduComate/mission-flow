@@ -1,16 +1,18 @@
 ---
 name: direct-impl
-description: 在 split 完成且用户选择跳过 plan 后使用。主 Agent 基于已创建的 Story 和当前上下文直接实现，完成验证、自审、提交绑定 Story，并进入 finish-git-worktree
+description: 在卡片拆分完成且用户选择直接开始实施后使用。主 Agent 基于已创建的 Story 和当前上下文直接实现，完成验证、自审、提交绑定 Story，并进入开发收尾
 metadata:
-  version: 0.2.0
+  version: 0.2.1
 ---
 
 ## 目标
 
 基于 `split` 已创建并经用户确认的 Story 直接实现需求
 
+**开始时声明：**“已进入直接实施阶段，我将依据已确认的 Story 开始开发、验证和自审。”不得向用户展示 `direct-impl` 这一内部 skill 名称。
+
 > [!IMPORTANT]
-> 用户已经选择跳过 `plan`，因此不要反向补写实施计划。只有在 Story 边界或需求本身无法支撑实现时才停止并请求用户回到 `split` 或 `plan`。
+> 用户已经选择跳过编写计划文档，因此不要反向补写计划文档。只有在 Story 边界或需求本身无法支撑实现时才停止，并请求用户回到卡片拆分或编写计划文档阶段。内部调用分别对应 `split` 和 `plan`。
 
 ## 流程
 
@@ -110,7 +112,7 @@ flowchart TD
 绝不要：
 
 - 跳过 Story 绑定策略
-- 在跳过 `plan` 后反向补写 `tasks.md`
+- 在跳过编写计划文档后反向补写 `tasks.md`
 - 把 Feature 或 Story 下 Task 作为提交绑定单位
 - 在主分支上擅自实现
 - 覆盖、清理或丢弃用户已有改动

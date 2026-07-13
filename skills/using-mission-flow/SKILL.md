@@ -2,7 +2,7 @@
 name: using-mission-flow
 description: 在任何对话开始时使用。建立如何查找和使用 skills 的流程和概念，子 agent 禁止使用。用来指导 Agent 如何使用 skill
 metadata:
-  version: 0.2.0
+  version: 0.2.1
 hidden: true
 disable-model-invocation: true
 user-invocable: false
@@ -33,25 +33,37 @@ user-invocable: false
 
 对会产生代码变更的厂内研发活动，主流程是：
 
+面向用户展示流程时，必须使用中文阶段名称。英文 skill 名称只用于内部调用、配置和维护，不得把“进入 design”“执行 split”这类内部术语直接作为用户选项或进度提示。
+
+| 内部 skill            | 用户展示名称          | 用户可理解的动作                  |
+| --------------------- | --------------------- | --------------------------------- |
+| `think`               | 需求澄清              | 理解需求、调研上下文、确认范围    |
+| `design`              | 方案设计              | 编写并评审设计文档                |
+| `split`               | 卡片拆分              | 创建 iCafe Feature 和 Story       |
+| `plan`                | 编写计划文档          | 把 Story 转成可执行计划文档       |
+| `direct-impl`         | 直接实施              | 跳过计划文档，依据 Story 开始开发 |
+| `subagent-impl`       | 启动子 Agent 进行实施 | 派发子 Agent 逐项开发和评审       |
+| `finish-git-worktree` | 开发收尾              | 验证结果并处理分支和工作区        |
+
 ```mermaid
 flowchart TD
-    A[用户需求] --> T[think]
-    T --> QD{Question:<br/>是否进入 design?}
-    QD -->|是| D[design]
-    QD -->|否| S[split]
+    A[用户需求] --> T[需求澄清]
+    T --> QD{是否进行方案设计?}
+    QD -->|是| D[方案设计]
+    QD -->|否| S[卡片拆分]
     D --> S
-    S --> QP{Question:<br/>是否进入 plan?}
-    QP -->|是| P[plan]
-    QP -->|否| I[direct-impl]
-    P --> E[subagent-impl]
-    E --> R[review / finish-git-worktree]
+    S --> QP{是否编写计划文档?}
+    QP -->|是| P[编写计划文档]
+    QP -->|否| I[直接实施]
+    P --> E[启动子 Agent 进行实施]
+    E --> R[代码评审与开发收尾]
     I --> R
 ```
 
-- `think` 是必选步骤：澄清需求、调研必要上下文，并展示当前理解
-- `design` 是可选步骤：只在用户选择后编写设计文档
-- `split` 是必选步骤：创建或确认 iCafe Feature / Story 卡片，作为研发活动和提交绑定的承载
-- `plan` 是可选步骤：只在用户选择后编写实施计划
+- 需求澄清（内部 skill：`think`）是必选步骤：澄清需求、调研必要上下文，并展示当前理解
+- 方案设计（内部 skill：`design`）是可选步骤：只在用户选择后编写设计文档
+- 卡片拆分（内部 skill：`split`）是必选步骤：创建或确认 iCafe Feature / Story 卡片，作为研发活动和提交绑定的承载
+- 编写计划文档（内部 skill：`plan`）是可选步骤：只在用户选择后生成可审阅、可执行的文档
 
 ## Question 工具使用规则
 
@@ -68,9 +80,11 @@ question 工具标题和每个子项内容都要精炼，并按以下格式组�
 3. [简要标题] description: [选择后的影响或代价]
 ```
 
+阶段选择问题的标题、选项和 description 必须使用上表中的中文展示名称，并说明将执行的动作或生成的产物。不得要求用户理解英文 skill 名称。
+
 ## 编码及语言规则
 
-1. **禁止使用破折号。**请使用逗号、句号和冒号。（此条为硬性规定，因回复中常出现此模式，故着重强调）
+1. **禁止使用破折号。** 请使用逗号、句号和冒号。（此条为硬性规定，因回复中常出现此模式，故着重强调）
 2. 回复用户的语言必须是用户发送语言（若多种语言混杂则选择中文回复）
 3. 未经用户同意在 icode 上 push 或提交 cr，若用户同意提交 cr，必须提交到 `@{upstream}`，因为我们的开发分支没有对应的远程分支，格式类似于
    ```bash

@@ -2,14 +2,14 @@
 name: using-git-worktrees
 description: 在开始需要与当前工作区隔离的功能开发，或执行实现计划前使用
 metadata:
-  version: 0.2.0
+  version: 0.2.1
 ---
 
 ## 概览
 
 Git worktrees 会创建共享同一仓库的隔离工作空间，允许在不切换分支的情况下同时处理多个分支。
 
-**开始时声明：** "我正在使用 using-git-worktrees skill 来设置独立工作空间"
+**开始时声明：**“正在准备独立开发工作区，以隔离本次改动并保护当前工作区。”不得向用户展示 `using-git-worktrees` 这一内部 skill 名称。
 
 ## 路径规则
 

@@ -1,19 +1,21 @@
 ---
 name: subagent-impl
-description: 在 plan 完成并经用户 review 确认后使用。按 tasks.md 为每个 Task 派发 subagent 实现，完成后进入 finish-git-worktree
+description: 在计划文档完成并经用户审阅确认后使用。按 tasks.md 为每个 Task 派发 subagent 实现，完成后进入开发收尾
 metadata:
-  version: 0.2.0
+  version: 0.2.1
 ---
 
 ## 目标
 
-通过为每个 task 派发新的 subagent 来忠实的执行计划文档（`tasks.md`）
+通过为每个 task 派发新的 subagent 来忠实地执行计划文档（`tasks.md`）
+
+**开始时声明：**“正在启动子 Agent 进行实施，我会依据计划文档逐项开发，并完成规格与代码质量评审。”不得向用户展示 `subagent-impl` 这一内部 skill 名称。
 
 > [!NOTE] 为什么使用 subagent：
 >  你将任务委托给具有隔离上下文的专用 agent。通过精确构造它们的指令和上下文，可以确保它们保持专注并完成任务。它们不应继承你当前会话的上下文或历史；你只构造它们确实需要的内容。这也会保留你自己的上下文，用于协调工作。
 
 > [!IMPORTANT]
-> 不要在任务进行中暂停并向用户确认。你需要不中断地执行计划中的所有任务。唯一应该停止的原因是：出现你无法解决的 BLOCKED 状态、存在真正阻止推进的歧义，或所有任务都已完成。“我应该继续吗？”这类提示和进度摘要会浪费他们的时间；他们要求你执行计划，所以执行它。
+> 不要在任务进行中暂停并向用户确认。你需要不中断地执行计划文档中的所有任务。唯一应该停止的原因是：出现你无法解决的 BLOCKED 状态、存在真正阻止推进的歧义，或所有任务都已完成。“我应该继续吗？”这类提示和进度摘要会浪费他们的时间；他们要求你执行计划，你就要彻底地执行它
 
 ## 流程
 
@@ -26,7 +28,7 @@ implementer 的自审不是 review 阶段。code quality reviewer 不能替代 s
 
 ```mermaid
 flowchart TD
-    Start[阅读计划，提取所有任务全文，记录上下文，创建 TodoWrite]
+    Start[阅读计划文档，提取所有任务全文，记录上下文，创建 TodoWrite]
     Start --> Dispatch[派发 implementer subagent]
 
     subgraph PerTask[每个任务]
@@ -64,7 +66,7 @@ Implementer subagent 会报告四种状态之一。请分别妥善处理：
 **BLOCKED：** implementer 无法完成任务。评估阻塞原因：
 1. 如果是上下文问题，提供更多上下文并重新派发
 2. 如果任务过大，将其拆分成更小的部分
-3. 如果计划本身有误，报告给人类处理
+3. 如果计划文档本身有误，报告给人类处理
 
 不要在没有任何改变的情况下强迫 subagent 重试。如果 implementer 表示卡住了，就必须做出某种调整。
 
@@ -77,9 +79,9 @@ Implementer subagent 会报告四种状态之一。请分别妥善处理：
 ## 示例工作流
 
 ```
-You: 我正在使用 subagent-impl skill 执行此计划。
+You: 正在启动子 Agent 进行实施，我会依据计划文档逐项开发，并完成规格与代码质量评审。
 
-[读取一次计划：.comate/specs/{feature_name}/tasks.md]
+[读取一次计划文档：.comate/specs/{feature_name}/tasks.md]
 [提取每个任务的目标、范围、上下文、文件、验收标准、约束和验证方式]
 [使用所有任务创建 TodoWrite]
 
