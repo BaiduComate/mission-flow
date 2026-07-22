@@ -34,7 +34,7 @@ fi
 plugin_dir="$(dirname "${hooks_dir}")"
 bin_dir="${plugin_dir}/bin"
 bin_base_url="https://vercel-static.bj.bcebos.com/stash/v1/0b72aae/comate-plus-web/7a0aaaf/mission-flow/bin"
-hook_binary_version="1.1.4"
+hook_binary_version="1.1.5"
 
 os="$(uname -s 2>/dev/null || true)"
 arch="$(uname -m 2>/dev/null || true)"
