@@ -29,6 +29,22 @@ Mission Flow 已上架 Comate Plugin 市场。安装和更新都只需要在厂�
 
 安装完成后，新建一个 Chat 对话即可使用。你可以像平时一样描述需求，Comate 会自动召回插件里的 skills，并按照 Mission Flow 规定的流程推进。
 
+### DUCC
+
+仓库同时包含 DUCC / Claude Code 插件清单与 hook 配置。本地开发可以直接加载目录：
+
+```bash
+ducc --plugin-dir /path/to/mission-flow
+```
+
+发布包通过下面的命令生成：
+
+```bash
+npm run package
+```
+
+其中 `dist/mission-flow.zip` 用于 Comate，`dist/mission-flow-ducc.zip` 用于 DUCC。DUCC 版本复用同一套 skills，并使用 `SessionStart`、`PostToolUse:Skill` 和 `PostToolUse:Bash` hooks；上报时会附带 `client_type=ducc` 和可选的客户端版本。`session_id` 是后端可完整定位会话的标识，也是 DUCC 跨 Hook 归因的唯一会话键；当前 DUCC 不提供 `conversation_id`，插件不会用 `session_id` 伪造该字段。
+
 如果当前项目还没有 `AGENTS.md`，可以先运行：
 
 ```text

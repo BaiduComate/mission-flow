@@ -2,17 +2,30 @@
 set -eu
 
 fail_open() {
-  case "${1:-}" in
-    session-start)
+  runtime="comate"
+  event="${1:-}"
+  if [ "${event}" = "ducc" ]; then
+    runtime="ducc"
+    event="${2:-}"
+  fi
+
+  case "${runtime}:${event}" in
+    ducc:session-start)
+      printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":""}}'
+      ;;
+    ducc:skill-use|ducc:pre-tool-use|ducc:post-tool-use)
+      printf '{}'
+      ;;
+    comate:session-start)
       printf '{"additionalContext":""}'
       ;;
-    pre-tool-use)
+    comate:pre-tool-use)
       printf '{"decision":"allow"}'
       ;;
-    post-tool-use)
+    comate:post-tool-use)
       printf '{"continue":true}\n'
       ;;
-    version|--version|-v)
+    comate:version|comate:--version|comate:-v|ducc:version|ducc:--version|ducc:-v)
       printf 'mission-flow-hook launcher: unsupported platform or missing binary\n'
       ;;
     *)
@@ -22,6 +35,11 @@ fail_open() {
   exit 0
 }
 
+runtime="comate"
+if [ "${1:-}" = "ducc" ]; then
+  runtime="ducc"
+fi
+
 script_path="$0"
 case "${script_path}" in
   */*) script_dir="${script_path%/*}" ;;
@@ -29,12 +47,11 @@ case "${script_path}" in
 esac
 
 if ! hooks_dir="$(cd "${script_dir}" 2>/dev/null && pwd -P)"; then
-  fail_open "${1:-}"
+  fail_open "$@"
 fi
 plugin_dir="$(dirname "${hooks_dir}")"
-bin_dir="${plugin_dir}/bin"
 bin_base_url="https://vercel-static.bj.bcebos.com/stash/v1/0b72aae/comate-plus-web/7a0aaaf/mission-flow/bin"
-hook_binary_version="1.1.5"
+hook_binary_version="1.2.0"
 
 os="$(uname -s 2>/dev/null || true)"
 arch="$(uname -m 2>/dev/null || true)"
@@ -42,18 +59,31 @@ arch="$(uname -m 2>/dev/null || true)"
 case "${os}" in
   Darwin) goos="darwin" ;;
   Linux) goos="linux" ;;
-  *) fail_open "${1:-}" ;;
+  *) fail_open "$@" ;;
 esac
 
 case "${arch}" in
   arm64|aarch64) goarch="arm64" ;;
   x86_64|amd64) goarch="amd64" ;;
-  *) fail_open "${1:-}" ;;
+  *) fail_open "$@" ;;
 esac
 
 filename="mission-flow-hook-${goos}-${goarch}"
-target="${bin_dir}/${filename}"
 expected_version="${hook_binary_version}"
+bundled_target="${plugin_dir}/bin/${filename}"
+bundled_version_file="${bundled_target}.version"
+
+if [ -x "${bundled_target}" ] && [ "$(cat "${bundled_version_file}" 2>/dev/null || true)" = "${expected_version}" ]; then
+  exec "${bundled_target}" "$@"
+fi
+
+if [ "${runtime}" = "ducc" ] && [ -n "${CLAUDE_PLUGIN_DATA:-}" ]; then
+  bin_dir="${CLAUDE_PLUGIN_DATA}/bin"
+else
+  bin_dir="${plugin_dir}/bin"
+fi
+
+target="${bin_dir}/${filename}"
 version_file="${target}.version"
 download_url="${bin_base_url}/${expected_version}/${filename}"
 lock_dir="${target}.lock"
@@ -160,7 +190,7 @@ start_async_download() {
 
 if [ ! -x "${target}" ] || [ "$(cat "${version_file}" 2>/dev/null || true)" != "${expected_version}" ]; then
   start_async_download || true
-  fail_open "${1:-}"
+  fail_open "$@"
 fi
 
 exec "${target}" "$@"
