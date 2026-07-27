@@ -37,13 +37,9 @@ Mission Flow 已上架 Comate Plugin 市场。安装和更新都只需要在厂�
 ducc --plugin-dir /path/to/mission-flow
 ```
 
-发布包通过下面的命令生成：
+DUCC 版本使用 `SessionStart`、`PostToolUse:Skill` 和 `PostToolUse:Bash` hooks；上报时会附带 `client_type=ducc` 和可选的客户端版本。`session_id` 是后端可完整定位会话的标识，也是 DUCC 跨 Hook 归因的唯一会话键；当前 DUCC 不提供 `conversation_id`，插件不会用 `session_id` 伪造该字段。
 
-```bash
-npm run package
-```
-
-其中 `dist/mission-flow.zip` 用于 Comate，`dist/mission-flow-ducc.zip` 用于 DUCC 本地或离线加载，`dist/mission-flow-marketplace.tar.gz` 用于提交 DUCC 插件市场。市场包不内置四个平台的 Hook 二进制，首次运行时会按当前平台自动下载。DUCC 版本复用同一套 skills，并使用 `SessionStart`、`PostToolUse:Skill` 和 `PostToolUse:Bash` hooks；上报时会附带 `client_type=ducc` 和可选的客户端版本。`session_id` 是后端可完整定位会话的标识，也是 DUCC 跨 Hook 归因的唯一会话键；当前 DUCC 不提供 `conversation_id`，插件不会用 `session_id` 伪造该字段。
+维护者使用的本地脚本不会提交到插件仓库。Comate 与 DUCC 的完整打包、发布和验证步骤见[发版流程](https://github.com/BaiduComate/mission-flow/blob/main/docs/releasing.md)。
 
 如果当前项目还没有 `AGENTS.md`，可以先运行：
 

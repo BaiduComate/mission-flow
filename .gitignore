@@ -1,6 +1,28 @@
-.DS_store
-__pycache__
-/.obsidian
+# Dependencies and generated packages
+node_modules/
+/dist/
+/scripts/
+
+# Locally supplied Hook binaries
 /bin/mission-flow-hook-*
 /bin/mission-flow-hook.MANIFEST
 /bin/*.tmp.*
+
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+
+# macOS metadata and local editor state
+.DS_Store
+._*
+__MACOSX/
+/.obsidian/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Temporary files
+*.tmp
+*.tmp.*

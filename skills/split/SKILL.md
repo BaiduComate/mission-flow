@@ -81,7 +81,9 @@ metadata:
 
 偏好分为两层：个人偏好（跨仓库共享，默认值）和项目偏好（按仓库独立，覆盖个人偏好）。
 
-**个人偏好文件**: `<HOME>/.comate/icafe/${COMATE_USERNAME}.json`（`defaults` 节点）
+进入此阶段后先运行 `icafe-cli login status`，读取返回 JSON 的 `username` 字段作为 `<icafe-username>`；命令不在 `PATH` 时使用 `~/.icafe-cli/bin/icafe-cli login status`。未登录或没有返回用户名时，要求用户先完成 iCafe 登录，不要猜测。
+
+**个人偏好文件**: `<HOME>/.comate/icafe/<icafe-username>.json`（`defaults` 节点）
 
 **项目偏好文件**: `<HOME>/.comate/icafe/<repo-name>.json`（`repos.<repo-name>` 节点, `<repo-name>` = 当前工作目录 git repo 的 basename）
 
@@ -94,7 +96,7 @@ metadata:
 **执行步骤**:
 
 1. **读取并展示个人偏好**:
-   - 使用 `read_file` 工具读取 `<HOME>/.comate/icafe/${COMATE_USERNAME}.json`, 展示完整**绝对路径**和 `defaults` 节点原始 JSON
+   - 使用 `read_file` 工具读取 `<HOME>/.comate/icafe/<icafe-username>.json`, 展示完整**绝对路径**和 `defaults` 节点原始 JSON
    - 文件不存在时明确告知路径并说明将创建
 
 2. **读取并展示项目偏好**:
@@ -154,7 +156,7 @@ metadata:
    - 比较最终偏好值与读取时的原始值, 判断是否有变化
    - **值有变化或首次填充缺失字段时**:
      - 使用 `write_file` 或 `edit_file` 将变更后的偏好值回写到对应的偏好文件
-     - 个人偏好 → 写入 `<HOME>/.comate/icafe/${COMATE_USERNAME}.json` 的 `defaults` 节点
+     - 个人偏好 → 写入 `<HOME>/.comate/icafe/<icafe-username>.json` 的 `defaults` 节点
      - 项目偏好 → 写入 `<HOME>/.comate/icafe/<repo-name>.json` 的 `repos.<repo-name>` 节点
      - 更新 `updatedAt` 为当前日期
      - 若文件不存在则创建完整结构
@@ -204,7 +206,7 @@ metadata:
 规则：
 
 1. 如果项目偏好中已配置 `autoSplitTask`，按偏好执行
-2. 如果项目偏好未配置，回退使用个人偏好 `${COMATE_USERNAME}.json` 中的 `defaults.autoSplitTask`
+2. 如果项目偏好未配置，回退使用个人偏好 `<icafe-username>.json` 中的 `defaults.autoSplitTask`
 3. 两层偏好均未配置时，必须使用 question 工具询问用户是否创建 Story 下 Task 卡片
 4. Task 卡片只描述 Story 内部步骤，不作为提交绑定单位
 5. 拆分规则：按 Story 工时拆分，默认 1 人日 = 1 个 Task

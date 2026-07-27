@@ -1,8 +1,5 @@
 {
   "name": "mission-flow",
-  "version": "1.2.0",
-  "type": "module",
-  "scripts": {
-    "package": "node scripts/package-plugin.mjs"
-  }
+  "version": "1.2.2",
+  "type": "module"
 }
