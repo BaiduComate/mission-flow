@@ -10,11 +10,12 @@
    - `package.json`
    - `plugin.json`
    - `.claude-plugin/plugin.json`
-2. 确认 Hook 二进制输入存在：
+2. 确认仓库已跟踪以下两个常用平台的 Hook 二进制及版本文件：
    - `bin/mission-flow-hook-darwin-arm64`
    - `bin/mission-flow-hook-darwin-arm64.version`
    - `bin/mission-flow-hook-linux-amd64`
    - `bin/mission-flow-hook-linux-amd64.version`
+   Comate 与 DUCC 产物都会内置这些文件。Darwin amd64、Linux arm64 等其他平台不进入仓库和安装包，仍由 Hook 启动脚本按需下载。
 3. 确认 `~/.comate/skills/.system/icafe/SKILL.md` 存在。该 Skill 只注入 DUCC 产物，不进入源码或 Comate 包。需要使用其他来源时，设置 `MISSION_FLOW_ICAFE_SKILL_DIR`。
 4. 执行统一打包：
 
@@ -32,7 +33,7 @@ node scripts/package-plugin.mjs
 | `dist/ducc-manifest.json` | DUCC 离线包清单 |
 | `dist/mission-flow-marketplace.tar.gz` | DUCC Marketplace 发布包 |
 
-打包脚本会校验三个版本号、DUCC 内置二进制和 iCafe Skill 来源，并禁止将 macOS `._*`、`__MACOSX` 及扩展属性写入市场包。
+打包脚本会校验三个版本号、两个公共内置二进制和 DUCC 的 iCafe Skill 来源，并禁止将 macOS `._*`、`__MACOSX` 及扩展属性写入市场包。
 
 ## 2. 发布 Comate
 

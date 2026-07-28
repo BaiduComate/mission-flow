@@ -3,8 +3,12 @@ node_modules/
 /dist/
 /scripts/
 
-# Locally supplied Hook binaries
+# Hook binaries: only the two common release targets are tracked
 /bin/mission-flow-hook-*
+!/bin/mission-flow-hook-darwin-arm64
+!/bin/mission-flow-hook-darwin-arm64.version
+!/bin/mission-flow-hook-linux-amd64
+!/bin/mission-flow-hook-linux-amd64.version
 /bin/mission-flow-hook.MANIFEST
 /bin/*.tmp.*
 
