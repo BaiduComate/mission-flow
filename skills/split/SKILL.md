@@ -1,6 +1,6 @@
 ---
 name: split
-description: 用于理解需求内容、拆分任务并创建 iCafe Feature / Story 卡片，建议在 think / design 完成后使用，完成后询问用户是否进入 plan
+description: 用于理解需求内容、拆分任务并创建 iCafe 卡片，建议在 think / design 完成后使用，完成后询问用户是否进入 plan
 metadata:
   version: 0.2.1
 ---
