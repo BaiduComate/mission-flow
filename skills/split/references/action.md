@@ -8,11 +8,12 @@
 | 功能描述 | description | HTML 格式，Feature 和 Story 使用不同模板 |
 | 父卡片 | card_type | Feature |
 | 子卡片 | card_type | Story |
+| Story 下任务 | card_type | Task |
 | 负责人 | assignee_id | 默认使用触发操作的用户 |
 | 状态 | status | 默认"新建" |
 | 优先级 | priority | P0-Highest / P1-High / P2-Middle / P3-Low / P4-Lowest |
 
-## Feature 描述模板（HTML）
+## Feature 描述模板
 
 创建 Feature 卡片时 `description` 字段需为 HTML 格式，将以下 Markdown 模板转换后传入：
 
@@ -53,7 +54,7 @@
 - "代码库现状" ← 第二步代码库调研报告（直接搬入）
 - "任务总览" ← 第四步拆分结果汇总
 
-## Story 描述模板（HTML）
+## Story 描述模板
 
 创建 Story 卡片时 `description` 字段需为 HTML 格式，将以下 Markdown 模板转换后传入：
 
@@ -76,6 +77,9 @@
 ## 技术要点
 - [该 Story 特有的实现约束或建议]
 
+## 需求验证点
+[完成该 Story 后需要注意验证的点]
+
 ## 依赖
 - 依赖 Story [序号] [标题]: [具体依赖什么]
 - 外部依赖: [如有]
@@ -89,37 +93,19 @@
 **数据来源：**
 - "关注文件与目录" ← 第二步调研报告的模块映射，按 Story 粒度拆分
 - "技术要点" ← 第一步文档分析中与该 Story 相关的技术约束
+- "需求验证点" ← 从 `ac-generator` 内获取的知识和当前项目需求推断出来
 - "依赖" ← 第四步合并判断中识别出的依赖关系
 - "背景"中的父需求链接 ← 第六步创建 Feature 后获得的 iCafe 链接
 
-## 输出格式（创建完成后）
+## 输出格式
+
+父子关系必须为：Task → Story（parent）→ Feature（parent）→ projectCard（parent）。创建 Story 或 Task 时通过 `parent` 参数直接绑定父卡片，不要创建后再 update 绑定。
+
+输出格式统一为 `[{space}-{sequence}](https://console.cloud.baidu-int.com/devops/icafe/issue/{space}-{sequence}/show)`。样例如下
 
 ```
-卡片创建结果
+iCafe 卡片已创建：
 
-- 需求名称：[名称]
-- 核心目标：[目标]
-- 需求文档：[URL，如有]
-
-Feature 卡片
-| 序号 | 标题 | 类型 | 负责人 | 链接 |
-|------|------|------|--------|------|
-| 1 | ... | Feature | xxx | [查看](...) |
-
-Story 卡片列表（共 N 个）
-
-#### 前端卡片
-| 序号 | 标题 | 负责人 | 链接 |
-|------|------|--------|------|
-| 1 | ... | xxx | [查看](...) |
-
-#### 服务端卡片
-| 序号 | 标题 | 负责人 | 链接 |
-|------|------|--------|------|
-| 1 | ... | xxx | [查看](...) |
-
-提示
-- 所有卡片已创建成功
-- 包含 1 个 Feature 父卡片和 N 个 Story 子卡片
-- 可通过链接访问卡片详情
+Feature: DevOps-iScan-38896：【MISSION】AppBuilder 模式
+Story: DevOps-iScan-38897：【MISSION】【全栈】【AppBuilder】新增 AppBuilder 模式完整实现
 ```

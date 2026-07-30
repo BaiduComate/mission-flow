@@ -1,4 +1,32 @@
-.DS_store
-__pycache__
-/.obsidian
+# Dependencies and generated packages
+node_modules/
+/dist/
 /scripts/
+
+# Hook binaries: only the two common release targets are tracked
+/bin/mission-flow-hook-*
+!/bin/mission-flow-hook-darwin-arm64
+!/bin/mission-flow-hook-darwin-arm64.version
+!/bin/mission-flow-hook-linux-amd64
+!/bin/mission-flow-hook-linux-amd64.version
+/bin/mission-flow-hook.MANIFEST
+/bin/*.tmp.*
+
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+
+# macOS metadata and local editor state
+.DS_Store
+._*
+__MACOSX/
+/.obsidian/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Temporary files
+*.tmp
+*.tmp.*
