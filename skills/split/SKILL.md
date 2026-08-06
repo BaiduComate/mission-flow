@@ -176,7 +176,7 @@ metadata:
 创建规则：
 
 1. 先创建 Feature 父卡片，再创建 Story 子卡片
-2. Story 创建时通过 `parent` 同时绑定 Feature(支持跨空间绑定父卡片，相关参数配置parentSpacePrefixCode)，不要创建后再 update 绑定
+2. Story 创建时通过 `parent` 同时绑定 Feature(支持跨空间绑定父卡片，相关参数配置 parentSpacePrefixCode)，不要创建后再 update 绑定
 3. 先创建 Feature / Story；Story 下 Task 卡片仅在用户选择或偏好开启时创建
 4. Feature 描述写入需求概述、代码库现状和任务总览
 5. Story 描述写入背景、目标、详细说明、关注文件、技术要点和依赖
