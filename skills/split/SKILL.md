@@ -1,13 +1,13 @@
 ---
 name: split
-description: 必须在需求澄清或方案设计完成后使用。用于拆分并创建 iCafe Feature / Story 卡片，完成后询问用户是否编写计划文档
+description: 用于理解需求内容、拆分任务并创建 iCafe 卡片，建议在 think / design 完成后使用，完成后询问用户是否进入 plan
 metadata:
   version: 0.2.1
 ---
 
 ## 目标
 
-将已澄清的需求拆分为 iCafe Feature / Story 卡片，作为百度内部研发活动和提交绑定的承载。
+将已澄清的需求拆分为 iCafe 卡片，作为百度内部研发活动和提交绑定的承载。
 
 **开始时声明：**“已进入卡片拆分阶段，我会整理 Feature 和 Story，确认后创建 iCafe 卡片。”不得向用户展示 `split` 这一内部 skill 名称。
 
@@ -176,7 +176,7 @@ metadata:
 创建规则：
 
 1. 先创建 Feature 父卡片，再创建 Story 子卡片
-2. Story 创建时通过 `parent` 同时绑定 Feature，不要创建后再 update 绑定
+2. Story 创建时通过 `parent` 同时绑定 Feature(支持跨空间绑定父卡片，相关参数配置 parentSpacePrefixCode)，不要创建后再 update 绑定
 3. 先创建 Feature / Story；Story 下 Task 卡片仅在用户选择或偏好开启时创建
 4. Feature 描述写入需求概述、代码库现状和任务总览
 5. Story 描述写入背景、目标、详细说明、关注文件、技术要点和依赖
