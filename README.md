@@ -73,7 +73,7 @@ Mission Flow 从会话开始就介入。
 
 如果你选择跳过计划，`direct-impl` 会直接基于已确认的 Story 实现，但仍然要求验证、自审、提交绑定 Story，并在完成后进入 `finish-git-worktree`。
 
-这条链路的旁边还有几项辅助能力：`deepwiki` 用于查询仓库 DeepWiki 文档，`icr-code-scan` 和 `icr-code-fixer` 用于代码审查和扫描问题修复。
+这条链路的旁边还有几项辅助能力：`icr-code-scan` 和 `icr-code-fixer` 用于代码审查和扫描问题修复。
 
 ## 基础流程
 
@@ -81,7 +81,7 @@ Mission Flow 从会话开始就介入。
 
 1. **流程引导**（`using-mission-flow`）：会话启动时注入技能使用规则，要求 Agent 在行动前检查相关 skills，并把研发活动导向 Mission Flow 主流程。
 2. **需求澄清**（`think`）：任何会产生代码变更的研发活动前必须执行。它负责澄清需求、调研必要上下文、提出方案，并询问是否进行方案设计。
-3. **方案设计**（`design`）：用户选择后执行。它把方案写入 `.comate/specs/{feature_name}/doc.md`，补充 DeepWiki 和代码探索上下文，并通过 reviewer 自检。
+3. **方案设计**（`design`）：用户选择后执行。它把方案写入 `.comate/specs/{feature_name}/doc.md`，补充代码探索上下文，并通过 reviewer 自检。
 4. **卡片拆分**（`split`）：在需求澄清或方案设计后执行。它拆分并创建 iCafe Feature 和 Story，明确 Story 作为提交绑定单位，并询问是否编写计划文档。
 5. **编写计划文档**（`plan`）：用户选择后执行。它把已确认的 Story 转写成 `.comate/specs/{feature_name}/tasks.md`，供用户审阅和后续实施。
 6. **启动子 Agent 进行实施**（`subagent-impl`）：在计划文档确认后执行。它按 Task 派发 implementer，并依次通过 spec compliance review 和 code quality review。
@@ -96,7 +96,7 @@ Mission Flow 从会话开始就介入。
 - **设计和计划可选，但选择后必须认真执行**：`design` 和 `plan` 由用户确认进入；一旦进入，就要生成可审查、可执行的文档。
 - **隔离工作区**：需要实现时优先使用 worktree，保护当前工作区和用户已有改动。
 - **证据优先**：完成前要有验证、自审或 review 证据，而不是只说“应该可以”。
-- **厂内工具优先**：iCafe、DeepWiki、ICR / aiscan 和 Comate hook 是这个插件的实际上下文，不假装它是一个通用开源脚手架。
+- **厂内工具优先**：iCafe、ICR / aiscan 和 Comate hook 是这个插件的实际上下文，不假装它是一个通用开源脚手架。
 
 ## 更新
 
