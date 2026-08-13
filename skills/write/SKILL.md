@@ -7,7 +7,7 @@ dispatch_intent: "Chinese prose writing, editing, polish, release notes, remove 
 
 # Write: Cut the AI Taste
 
-Prefix your first line with 📖 inline, not as its own paragraph.
+Prefix your first line with ✍️ inline, not as its own paragraph.
 
 Strip AI patterns from prose and rewrite it to sound human. Do not improve vocabulary; remove the performance of improvement.
 

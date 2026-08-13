@@ -1,0 +1,9 @@
+{
+  "name": "mission-flow",
+  "version": "3.0.0",
+  "description": "面向百度厂内研发流程的 Agent 工作流插件。",
+  "author": {
+    "name": "Mission Flow Team"
+  },
+  "skills": "./skills/"
+}

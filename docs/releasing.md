@@ -1,15 +1,16 @@
 # Mission Flow 发版流程
 
-仓库同时产出 Comate 与 DUCC 插件。两端共享 skills 和版本号，但发布渠道、Hook 配置及 DUCC 的额外打包内容不同。
+仓库同时产出 Comate、DUCC 与 Codex 插件。三端共享 skills 和版本号。Comate / DUCC 带 Hook；Codex 当前只打包 skills，不含 Hook。
 
 发版脚本存放在维护者本机的 `scripts/`，该目录被 `.gitignore` 排除，不属于插件仓库内容。执行以下流程前需确认本机已有 `scripts/package-plugin.mjs` 和 `scripts/publish-ducc.mjs`。
 
 ## 1. 发版前准备
 
-1. 根据语义化版本更新以下三个文件，版本必须完全一致：
+1. 根据语义化版本更新以下四个文件，版本必须完全一致：
    - `package.json`
    - `plugin.json`
    - `.claude-plugin/plugin.json`
+   - `.codex-plugin/plugin.json`
 2. 确认仓库已跟踪以下两个常用平台的 Hook 二进制及版本文件：
    - `bin/mission-flow-hook-darwin-arm64`
    - `bin/mission-flow-hook-darwin-arm64.version`
@@ -32,8 +33,10 @@ node scripts/package-plugin.mjs
 | `dist/mission-flow-ducc.zip` | DUCC 本地或离线加载 |
 | `dist/ducc-manifest.json` | DUCC 离线包清单 |
 | `dist/mission-flow-marketplace.tar.gz` | DUCC Marketplace 发布包 |
+| `dist/mission-flow-codex/` | Codex 本地 Marketplace 根目录 |
+| `dist/mission-flow-codex.tar.gz` | Codex 离线 Marketplace 包 |
 
-打包脚本会校验三个版本号、两个公共内置二进制和 DUCC 的 iCafe Skill 来源，并禁止将 macOS `._*`、`__MACOSX` 及扩展属性写入市场包。
+打包脚本会校验四个版本号、两个公共内置二进制和 DUCC 的 iCafe Skill 来源，并禁止将 macOS `._*`、`__MACOSX` 及扩展属性写入市场包。Codex 包只含 `.codex-plugin/`、`skills/`、`README.md`，以及从 `commands/init.md` 生成的 `skills/init`。
 
 ## 2. 发布 Comate
 
@@ -115,3 +118,15 @@ ducc --no-session-persistence -p '只回复 MARKETPLACE_READY'
 ```
 
 发版失败时不要盲目重复 PUT。先查询线上版本；如果市场版本和插件版本都已经更新，则直接进入安装验证。任何已正式发布的内容变更原则上都应提升补丁版本，而不是覆盖同版本。
+
+## 4. 安装 Codex
+
+Codex 当前只分发 skills，不含 Hook。不要把当前仓库根登记成 Marketplace，否则会加载 DUCC 的 `hooks/hooks.json`。IDE 扩展不支持插件，使用 Codex CLI 或 ChatGPT 桌面端。
+
+```bash
+node scripts/package-plugin.mjs
+codex plugin marketplace add "$(pwd)/dist/mission-flow-codex"
+codex plugin add mission-flow@mission-flow-codex
+```
+
+也可以在 Codex 里打开 `/plugins` 安装。装完后必须新开一个会话。可用 `$think`、`$impl`、`$worktree`、`$write`、`$handoff`、`$init` 验证 skill 是否出现。
