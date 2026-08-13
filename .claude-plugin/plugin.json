@@ -1,6 +1,6 @@
 {
   "name": "mission-flow",
-  "version": "1.2.3",
+  "version": "3.0.0",
   "description": "面向百度厂内研发流程的 Agent 工作流插件，兼容 DUCC。",
   "author": {
     "name": "Mission Flow Team"
