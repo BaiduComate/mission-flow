@@ -1,6 +1,6 @@
 ---
 name: think
-description: 在动手改代码前使用，通过成轮提问把需求收敛到可实现的程度
+description: 任何需求实现类任务前调用，通过成轮提问把需求收敛到可实现的程度
 metadata:
   version: 0.3.0
 ---
