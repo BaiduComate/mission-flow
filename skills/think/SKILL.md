@@ -8,7 +8,7 @@ description: 任何需求实现类任务前调用，通过成轮提问把需求�
 提问时使用 question 工具，为每轮提问进行编号，并提供推荐答案，格式如下：
 
 ```
-**Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
+Q1 - <question title>: <question body, might be multiple paragraphs, including multiple choices>
 ```
 
 ## 提问准则
