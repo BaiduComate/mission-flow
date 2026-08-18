@@ -1,8 +1,6 @@
 ---
 name: worktree
 description: 需要与当前工作区隔离地开发，或需要收尾一个 worktree 分支时使用
-metadata:
-  version: 0.3.0
 ---
 
 ## 约定

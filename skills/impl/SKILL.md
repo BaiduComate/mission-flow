@@ -1,8 +1,6 @@
 ---
 name: impl
 description: 编写或修改代码时使用，提供可判定的改动判据和工作区安全规则
-metadata:
-  version: 0.3.0
 ---
 
 修改代码前读一次工作区状态，如果即将修改的文件不是本轮任务的产出，并且处于没有 commit 的状态，创建一个 worktree 来隔离工作
