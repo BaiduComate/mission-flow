@@ -109,6 +109,7 @@ def exempt_mask(line: str) -> list[bool]:
 
 
 def overlaps_exempt(mask: list[bool], start: int, end: int) -> bool:
+    """Return True if any character in [start, end) is exempt from checks."""
     return any(mask[start:end])
 
 
@@ -164,11 +165,12 @@ def fence_state(line: str, fence: tuple[str, int] | None) -> tuple[str, int] | N
 
 
 def detect_lang(text: str) -> str:
-    # Sample the language from real prose: fenced code, inline code, URLs, and
-    # link targets are stripped per line, so one kana inside a ```js block does
-    # not route an otherwise-Chinese document to ja. kana wins globally (any kana
-    # anywhere => ja, hence the early return); else Han => zh; Hangul is checked
-    # LAST so a mostly-Chinese text that merely quotes a Korean glyph stays zh.
+    """Sample the language from real prose: fenced code, inline code, URLs, and
+    link targets are stripped per line, so one kana inside a ```js block does
+    not route an otherwise-Chinese document to ja. kana wins globally (any kana
+    anywhere => ja, hence the early return); else Han => zh; Hangul is checked
+    LAST so a mostly-Chinese text that merely quotes a Korean glyph stays zh.
+    """
     saw_cjk = saw_hangul = False
     fence: tuple[str, int] | None = None
     for raw in _split_keepends(text):
@@ -186,7 +188,10 @@ def detect_lang(text: str) -> str:
 
 
 class Finding:
+    """One punctuation issue at a 1-based line and column."""
+
     def __init__(self, line: int, col: int, kind: str, snippet: str, suggestion: str):
+        """Store location, kind, matched snippet, and suggested replacement."""
         self.line = line
         self.col = col
         self.kind = kind
@@ -194,6 +199,7 @@ class Finding:
         self.suggestion = suggestion
 
     def format(self, source: str) -> str:
+        """Render this finding as `source:line:col [kind] snippet -> suggestion`."""
         return f"{source}:{self.line}:{self.col} [{self.kind}] {self.snippet!r} -> {self.suggestion}"
 
 
@@ -213,31 +219,46 @@ def check_latin_space(line: str, mask: list[bool], lineno: int, findings: list[F
         if overlaps_exempt(mask, m.start(), m.end()):
             continue
         p = m.group()[1]
-        findings.append(Finding(lineno, m.start() + 2, "missing-space-after-punct", m.group(), f"add a space after '{p}'"))
+        findings.append(Finding(
+            lineno, m.start() + 2, "missing-space-after-punct", m.group(),
+            f"add a space after '{p}'"))
 
 
 def check_zh(line: str, mask: list[bool], lineno: int, findings: list[Finding]) -> None:
-    # A half-width mark next to a Han char -- directly, or across a markdown
-    # emphasis marker (** or _), so `**标签**:` is caught, not just `标签:`.
+    """Collect zh punctuation findings for one line, skipping exempt spans.
+
+    A half-width mark next to a Han char -- directly, or across a markdown
+    emphasis marker (** or _), so `**标签**:` is caught, not just `标签:`.
+    """
     for m in re.finditer(f"[{CJK}][*_]*[{_HALFWIDTH}]", line):
         if overlaps_exempt(mask, m.start(), m.end()):
             continue
         p = m.group()[-1]
-        findings.append(Finding(lineno, m.end(), "zh-halfwidth-punct", m.group(), f"{p} -> {FULLWIDTH[p]}"))  # 1-based column of the offending punctuation
+        # 1-based column of the offending punctuation
+        findings.append(Finding(
+            lineno, m.end(), "zh-halfwidth-punct", m.group(),
+            f"{p} -> {FULLWIDTH[p]}"))
     for m in re.finditer(f"[{_HALFWIDTH}][*_]*[{CJK}]", line):
         if overlaps_exempt(mask, m.start(), m.end()):
             continue
         p = m.group()[0]
-        findings.append(Finding(lineno, m.start() + 1, "zh-halfwidth-punct", m.group(), f"{p} -> {FULLWIDTH[p]}"))  # 1-based column of the offending punctuation
+        # 1-based column of the offending punctuation
+        findings.append(Finding(
+            lineno, m.start() + 1, "zh-halfwidth-punct", m.group(),
+            f"{p} -> {FULLWIDTH[p]}"))
     for m in re.finditer(f"[{CJK}][A-Za-z0-9]|[A-Za-z0-9][{CJK}]", line):
         if overlaps_exempt(mask, m.start(), m.end()):
             continue
-        findings.append(Finding(lineno, m.start() + 1, "zh-missing-space", m.group(), "add a space between CJK and Latin"))
+        findings.append(Finding(
+            lineno, m.start() + 1, "zh-missing-space", m.group(),
+            "add a space between CJK and Latin"))
     check_dash(line, mask, lineno, findings)
     for m in re.finditer("　", line):
         if overlaps_exempt(mask, m.start(), m.end()):
             continue
-        findings.append(Finding(lineno, m.start() + 1, "zh-fullwidth-space", "　", "use a half-width space or remove it"))
+        findings.append(Finding(
+            lineno, m.start() + 1, "zh-fullwidth-space", "　",
+            "use a half-width space or remove it"))
     # A half-width sentence-ender after Latin/digit/%/) that the Han-adjacent
     # rules above miss, when the line is Chinese and the mark closes a clause
     # (end-of-line, or a CJK char / CJK punctuation next). Narrow on purpose:
@@ -266,6 +287,7 @@ def check_zh(line: str, mask: list[bool], lineno: int, findings: list[Finding]) 
 
 
 def check_en(line: str, mask: list[bool], lineno: int, findings: list[Finding]) -> None:
+    """Collect English punctuation findings for one line, skipping exempt spans."""
     check_dash(line, mask, lineno, findings)
     check_latin_space(line, mask, lineno, findings)
     for m in re.finditer(f"[{_CJK_PUNCT}]", line):
@@ -275,11 +297,16 @@ def check_en(line: str, mask: list[bool], lineno: int, findings: list[Finding]) 
     for m in re.finditer(r" +[,.;:!?]", line):
         if overlaps_exempt(mask, m.start(), m.end()):
             continue
-        findings.append(Finding(lineno, m.start() + 1, "en-space-before-punct", m.group(), "remove space before punctuation"))
+        findings.append(Finding(
+            lineno, m.start() + 1, "en-space-before-punct", m.group(),
+            "remove space before punctuation"))
 
 
 def check_ja(line: str, mask: list[bool], lineno: int, findings: list[Finding]) -> None:
-    # Same emphasis-marker bridge as check_zh, so `**見出し**:` is caught.
+    """Collect Japanese punctuation findings for one line, skipping exempt spans.
+
+    Same emphasis-marker bridge as check_zh, so `**見出し**:` is caught.
+    """
     for m in re.finditer(f"[{CJK}{KANA}][*_]*[{_HALFWIDTH}]|[{_HALFWIDTH}][*_]*[{CJK}{KANA}]", line):
         if overlaps_exempt(mask, m.start(), m.end()):
             continue
@@ -287,13 +314,16 @@ def check_ja(line: str, mask: list[bool], lineno: int, findings: list[Finding]) 
     for m in re.finditer(f"[{CJK}{KANA}] +[A-Za-z]|[A-Za-z] +[{CJK}{KANA}]", line):
         if overlaps_exempt(mask, m.start(), m.end()):
             continue
-        findings.append(Finding(lineno, m.start() + 1, "ja-extra-space", m.group(), "remove space between Japanese and Latin"))
+        findings.append(Finding(
+            lineno, m.start() + 1, "ja-extra-space", m.group(),
+            "remove space between Japanese and Latin"))
 
 
 CHECKERS = {"zh": check_zh, "en": check_en, "ja": check_ja}
 
 
 def fix_zh_line(line: str) -> str:
+    """Apply zero-ambiguity zh punctuation and CJK/Latin spacing fixes to one line."""
     mask = exempt_mask(line)
     chars = list(line)
     for m in re.finditer(f"[{CJK}][*_]*[{_HALFWIDTH}]", line):
@@ -335,6 +365,7 @@ def fix_zh_line(line: str) -> str:
 
 
 def fix_text(text: str, lang: str) -> str:
+    """Rewrite zh prose line by line; non-zh and fenced code are left unchanged."""
     if lang != "zh":
         return text
     out: list[str] = []
@@ -351,6 +382,7 @@ def fix_text(text: str, lang: str) -> str:
 
 
 def iter_findings(text: str, lang: str) -> list[Finding]:
+    """Collect unique findings for the given locale, skipping fenced code blocks."""
     findings: list[Finding] = []
     checker = CHECKERS.get(lang)
     if checker is None:
@@ -373,6 +405,7 @@ def iter_findings(text: str, lang: str) -> list[Finding]:
 
 
 def main() -> int:
+    """CLI entry: check a file or stdin, optionally print a --fix rewrite."""
     parser = argparse.ArgumentParser(description="Check punctuation / CJK mixing by locale.")
     parser.add_argument("file", nargs="?", help="File to read (default: stdin)")
     parser.add_argument("--lang", default="auto", choices=["zh", "en", "ja", "auto"])
