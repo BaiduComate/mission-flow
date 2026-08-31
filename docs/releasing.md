@@ -41,7 +41,7 @@ node scripts/package-plugin.mjs --channel default
 | `dist/codex/mission-flow-codex/` | Codex 本地 Marketplace 根目录 |
 | `dist/codex/mission-flow-codex.tar.gz` | Codex 离线 Marketplace 包 |
 
-打包脚本会校验四个版本号、两个公共内置二进制和 DUCC 的 iCafe Skill 来源，并禁止将 macOS `._*`、`__MACOSX` 及扩展属性写入市场包。Codex 包只含 `.codex-plugin/`、`skills/`、`README.md`，以及从 `commands/init.md` 生成的 `skills/init`。
+打包脚本会校验四个版本号、两个公共内置二进制和 DUCC 的 iCafe Skill 来源，并禁止将 macOS `._*`、`__MACOSX` 及扩展属性写入市场包。Codex 包只含 `.codex-plugin/`、`skills/`、`README.md`，其中 `skills/init` 是内置的初始化 skill，负责生成项目知识文档。
 
 ## 2. 发布 Comate
 

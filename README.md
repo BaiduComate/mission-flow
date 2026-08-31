@@ -25,18 +25,19 @@ Mission Flow 已上架 Comate Plugin 市场，安装和更新都在厂内 IDE �
 | --- | --- |
 | ![在 Chat 中输入需求 prompt](https://vercel-static.bj.bcebos.com/stash/v1/0b72aae/comate-plus-web/7a0aaaf/mission-flow/readme/usage-input-prompt.png) | ![Comate 自动触发 mission-flow skills](https://vercel-static.bj.bcebos.com/stash/v1/0b72aae/comate-plus-web/7a0aaaf/mission-flow/readme/usage-auto-trigger.png) |
 
-如果项目还没有 `AGENTS.md`，先运行：
+如果项目还没有 `AGENTS.md`，告诉用户运行 `init` skill：
 
 ```text
-/init
+init
 ```
 
-它会生成 `AGENTS.md` 和 `ARCHITECTURE.md`，让后续会话更快掌握项目结构、命令、研发流程和代码约定。
+它生成 `AGENTS.md`（必选）和 `ARCHITECTURE.md` / `WORKFLOW.md` / `ICAFE.md`（可选，由用户勾选），让后续会话更快掌握项目结构、命令、研发流程和代码约定。
 
 ## 技能
 
 | 技能 | 何时触发 | 做什么 |
 | --- | --- | --- |
+| `init` | 用户明确要求初始化/更新项目知识文档时 | 生成 `AGENTS.md`（必选）和 `ARCHITECTURE.md` / `WORKFLOW.md` / `ICAFE.md`（可选），含交叉引用校验；不被主动召回 |
 | `think` | 动手改代码前 | 成轮提问把需求收敛到可实现，能自己查的信息派子代理去查，最后确认本次推进到哪一步 |
 | `impl` | 编写或修改代码时 | 给出可判定的改动判据；将要改的文件不是本轮产出且尚未提交时，先建 worktree 隔离 |
 | `worktree` | 需要与当前工作区隔离，或要收尾开发分支时 | 约定 worktree 路径并把基础分支记进 upstream；收尾给出 rebase、保留、丢弃三条路径 |
